@@ -33,7 +33,7 @@ public class CpuScheduler {
 			next.setStartTime(start);
 			next.setName(p.getName());
 			readyQueue.add(next);
-			System.out.println( next.toString());
+			System.out.println(next.toString());
 		}
 	}
 	public static void main(String[] args) {
