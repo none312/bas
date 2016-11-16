@@ -1,37 +1,71 @@
-public class Process {
-	private char name;
-    private int arrivalTime; 
-    private int priority;   	
-    private int burstTime;     	
-    private int startTime;    
-    
-//  public Process(double arrivalTime, int priority, int burstTime, int startTime) {
-//	  arrivalTime = this.arrivalTime;
-//	  priority = this.priority;
-//	  burstTime = this.burstTime;
-//	  startTime = this.startTime;
-//  }
-    public int getArrivalTime() { return arrivalTime; }
-    public int getBurstTime() { return burstTime; }
-    public int getPriority() { return priority; }
-    public int getStartTime() { return startTime; }
-    public char getName() { return this.name; }
-    
-    
-    public void setArrivalTime(int arrivalTime) { this.arrivalTime = arrivalTime; }
-    public void setBurstTime(int burstTime) { this.burstTime = burstTime; }
-    public void setPriority(int priority) { this.priority = priority; }
-    public void setStartTime(int startTime) { this.startTime = startTime; }
-    public void setName(char name){ this.name = name; }    
-    
-    
-    @Override
-    public String toString() 
-    {
-    	String info = "Process " + name + " arrivalTime " + startTime + " priority " + priority + " burstTime " + burstTime ;
-        return info;
-    }	
+/*
+ *Define Process object 
+ *Variables: name, arrivalTime, priority, burstTime (expected run time)
+ */
+public class Process implements Comparable {
+	private String name;
+	private int arrivalTime; // [0, 100] Only applies to unscheduled process
+	private int priority; // [1, 4] Only applies to unscheduled processes
+	private int burstTime; // [0, 10]
+	private int startTime; // [0, 100] Only applies to already scheduled
+							// processes
+
+	public Process(String name, int arrivalTime, int priority, int burstTime) {
+		this.name = name;
+		this.priority = priority;
+		this.arrivalTime = arrivalTime;
+		this.burstTime = burstTime;
+
+	}
+
+	public int getArrivalTime() {
+		return arrivalTime;
+	}
+
+	public int getBurstTime() {
+		return burstTime;
+	}
+
+	public int getPriority() {
+		return priority;
+	}
+
+	public int getStartTime() {
+		return startTime;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setArrivalTime(int arrivalTime) {
+		this.arrivalTime = arrivalTime;
+	}
+
+	public void setBurstTime(int burstTime) {
+		this.burstTime = burstTime;
+	}
+
+	public void setPriority(int priority) {
+		this.priority = priority;
+	}
+
+	public void setStartTime(int startTime) {
+		this.startTime = startTime;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	@Override
+	public String toString() {
+		return name + ": Arrival time: " + arrivalTime + " Burst time: " + burstTime;
+	}
+	
+	@Override
+	public int compareTo(Object o) {
+		Process p = (Process) o;
+		return this.arrivalTime < p.arrivalTime ? -1 : 1;
+	}
 }
-    
-
-
