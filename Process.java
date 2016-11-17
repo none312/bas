@@ -9,13 +9,15 @@ public class Process implements Comparable {
 	private int burstTime; // [0, 10]
 	private int startTime; // [0, 100] Only applies to already scheduled
 							// processes
-
-	public Process(String name, int arrivalTime, int priority, int burstTime) {
+	private String state; 
+	
+	public cpuClock clock = new cpuClock();
+	public Process(String name, int arrivalTime, int priority, int burstTime, String State) {
 		this.name = name;
 		this.priority = priority;
 		this.arrivalTime = arrivalTime;
 		this.burstTime = burstTime;
-
+		this.state = State;
 	}
 
 	public int getArrivalTime() {
@@ -57,7 +59,15 @@ public class Process implements Comparable {
 	public void setName(String name) {
 		this.name = name;
 	}
-
+	public int getWaitTime(){
+		return cpuClock.getClock() - arrivalTime;
+	}
+	public String getState(){
+		return state;
+	}
+	public void setState(){
+		this.state = state;
+	}
 	@Override
 	public String toString() {
 		return name + ": Arrival time: " + arrivalTime + " Burst time: " + burstTime;

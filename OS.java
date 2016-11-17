@@ -8,8 +8,8 @@ public OS(){
 }
 
 public static void main (String args []){
-	Process p1 = new Process("Process 1", 0, 1, 6);
-	Process p2 = new Process("Process 2", 4, 2, 2);
+	Process p1 = new Process("Process 1", 0, 1, 6, "new");
+	Process p2 = new Process("Process 2", 4, 2, 2, "new");
 	PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
 	jobQueue.add(p1);
 	jobQueue.add(p2);

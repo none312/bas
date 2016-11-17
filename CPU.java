@@ -9,15 +9,19 @@ public class CPU {
 	}
 	public void advanceClock()
 	{
+       // IoInterrupt.interruptOccurred = false;
+        //return cpuClock.advanceClock();
 		time++;
 	}
 	
-	public void detectInterrupt(){
-		
+	public boolean detectInterrupt(){ //process stops and gets put into the waiting queue
+        return InterruptProcessor.interruptOccured;
+		 
 	}
 	
-	public void detectPreemption(){
-		
+	public  boolean detectPreemption(){ //the process completely stops
+		//NEED TO IMPLEMENT
+		return false;
 	}
 	
 }

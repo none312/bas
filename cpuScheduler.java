@@ -40,22 +40,4 @@ public class cpuScheduler {
 
 	}
 	
-	public static void main (String args [] )
-	{
-		Process p1 = new Process("Process 1", 0, 1, 6);
-		Process p2 = new Process("Process 2", 4, 2, 2);
-		PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
-		jobQueue.add(p1);
-		jobQueue.add(p2);
-		cpuScheduler cpuScheduler = new cpuScheduler(jobQueue);
-		cpuScheduler.fcfs(jobQueue);
-//		Iterator<Process> it = jobQueue.iterator();
-//		while(it.hasNext())
-//		{
-//			System.out.println(it.next().toString());
-//		}
-//		cpu.fcfs(jobQueue);
-	
-	}
-
 }
