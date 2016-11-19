@@ -1,27 +1,24 @@
 
 public class CPU {
-
-	public int cpu_clock;
-	private int time=0;
-	public CPU() {
-		//cpu_clock = burstTime;
-		
-	}
+	public Clock clock = new Clock();
+	public int cpuTime = 0;
+	public boolean interupted, preempted;
 	public void advanceClock()
 	{
-       // IoInterrupt.interruptOccurred = false;
-        //return cpuClock.advanceClock();
-		time++;
+		if(interupted == false && preempted == false)  //advance clock if process is not getting intereupted or preempted
+			cpuTime++;
+		//clock.getClock()++;
 	}
 	
-	public boolean detectInterrupt(){ //process stops and gets put into the waiting queue
-        return InterruptProcessor.interruptOccured;
-		 
+	public boolean detectInterupt()
+	{
+		interupted = true;
+		return interupted;
 	}
 	
-	public  boolean detectPreemption(){ //the process completely stops
-		//NEED TO IMPLEMENT
-		return false;
+	public boolean detectPreemption()
+	{
+		preempted = true;
+		return preempted;
 	}
-	
 }

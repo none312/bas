@@ -1,13 +1,17 @@
 import java.util.PriorityQueue;
 
 public class ExecutionQueue {
-    private PriorityQueue<Events> queue = new PriorityQueue<>();
+	PriorityQueue<Process> executionQ = new PriorityQueue<Process>();
 
-    public void enQueue(Events event) {
-        queue.add(event);
-    }
+	public ExecutionQueue()
+	{
+		
+	}
+	public void enQueue(Process p) {
+		executionQ.add(p);
+	}
 
-    boolean deQueue() {
-        return queue.remove(0);
-    }
+	public void deQueue() {
+		executionQ.poll();
+	}
 }
