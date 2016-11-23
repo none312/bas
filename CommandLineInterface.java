@@ -34,6 +34,7 @@ public class CommandLineInterface {
 
 
 //CommandLineInterface enables the user to type commands in a terminal or console window to interact with the OS.
+// TODO: implement the command line/shell and connect it with the Graphical User Interface
 
 //COMMANDS
 /*proc()
