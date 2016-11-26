@@ -22,3 +22,5 @@ public class Gui extends JFrame {
 //example.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //example.setSize();
 //example.setVisible(true);
+
+
