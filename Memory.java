@@ -1,7 +1,7 @@
 
 public class Memory {
 
-    public int memTotal;
+    public int memTotal = 256;
     public int memUsed = 0;
 
     public Memory(int mem) {
