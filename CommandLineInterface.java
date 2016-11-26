@@ -1,47 +1,91 @@
-public class CommandLineInterface {
-
-	    public void proc() {
+public class CommandLineInterface extends Gui 
+	{
+	private static final Parsing parse = new Parsing();
+	
+	public static boolean name(String input){
+	parse.parseLine(input);
+	boolean valid = valid();
+	if(valid){
+		if(parse.getval()==null)
+			choosecmd(parse.getcmd());
+		else
+			choosecmd(parse.getcmd(), parse.getval());
+	}
+	return valid;
+		}
+private static boolean valid()	{
+	if(parse.getcmd().equals("proc"))
+		return true;
+	if(parse.getcmd().equals("mem"))
+		return true;
+	if(parse.getcmd().equals("exe"))
+		return true;
+	if(parse.getcmd().equals("reset"))
+		return true;
+	if(parse.getcmd().equals("exit"))
+		return true;
+	if(parse.getcmd().equals("load"))
+		if(parse.getval()!= null)
+			return true;
+	return false;
+	}
+private static void choosecmd(String cmd){
+	switch(cmd){
+	
+	case "proc": proc(); 
+	break;
+	
+	case "mem": mem(); 
+	break;
+	
+	case "exe": exe();
+	break;
+	
+	case "reset": reset();
+	break;
+	
+	case "exit": exit();
+	break;
+	
+	default: break;
+	}
+}
+	    private static void proc() {
 
 	    }
 
-	    public void mem() {
+	    private static void mem() {
 
 	    }
 
-	    public void load() {	      
+	    private static void load() {	      
+	    
+	    }
+	    private static void exe() {
 	    
 	    }
 
-	    public void exe() {
-	    
-	    }
-
-	    public void reset() {
+	    private static void reset() {
 
 	    }
 	    
-	    public void exit() {
+	    private static void exit() {
 	      
 	    }
 
-	    public void promptUser(){
+	    private static void promptUser(){
 
 	    }
 	}
-
-
-
-
-
 //CommandLineInterface enables the user to type commands in a terminal or console window to interact with the OS.
-// TODO: implement the command line/shell and connect it with the Graphical User Interface
 
 //COMMANDS
+
 /*proc()
-mem()
-load()
-exe()
-reset()
-promptUser()
-*/
+  mem()
+  load()
+  exe()
+  reset()
+  promptUser()
+  */
 
