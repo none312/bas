@@ -1,5 +1,4 @@
-public class CommandLineInterface extends Gui 
-	{
+public class CommandLineInterface extends Gui {
 	private static final Parsing parse = new Parsing();
 	
 	public static boolean name(String input){
