@@ -7,6 +7,10 @@ import java.util.Random;
 public class io implements Comparable {
 	long arrivalTime;
 
+	public io()
+	{
+		
+	}
 	public int generateIoBurstTime()
 	{
 		Random r = new Random();

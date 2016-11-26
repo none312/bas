@@ -9,6 +9,8 @@ public class OS {
 	
 	public static Scheduler scheduler = new Scheduler(2);
 	public static PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
+	public static EventQueue eventQueue = new EventQueue();
+	public static CPU cpu = new CPU();
 	public static long curTime;
 	public static String str = null;
 	public static int memory=0;
@@ -79,7 +81,13 @@ public class OS {
 			break;
 		case "I/O":
 			//TODO: can be different devices
-			
+			ECB e = new ECB();
+			//TODO: set burttime, arrivaltime, name to ECB
+			eventQueue.enQueue(e);
+			for(int i = e.ioBurstTime; i>0; i--)
+			{
+				cpu.advanceClock();
+			}
 			break;
 		case "OUT":
 			command = "OUT";
