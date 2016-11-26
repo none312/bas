@@ -33,7 +33,8 @@ public class OS {
 		String st = s.substring(s.lastIndexOf(" ")+1, s.length());
 		return st;
 	}
-	
+	//TODO: Process name still include number of cycles, burstTime need to be set
+	//TODO: jobque read all lines -> include I/O task
 	public static void executeCmdLine(String command)
 	{
 		//System.out.println(command);
@@ -62,14 +63,8 @@ public class OS {
 			Process pr = jobQueue.poll();
 			pr.pcb.setArrivalTime(System.currentTimeMillis());
 			pr.pcb.setState("Ready");
-			try {
-				str=br.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String burstTime = str.substring(str.indexOf(" ")+1, str.length());
-			pr.pcb.setBurstTime(Integer.parseInt(burstTime));
+			int burstTime = Integer.parseInt(delimiter(pr.pcb.getName()));
+			pr.pcb.setBurstTime(burstTime);
 			scheduler.insertPCB(jobQueue.poll());
 			//scheduler.fcfs();
 			}
@@ -83,7 +78,8 @@ public class OS {
 			command = "NOT YET IMPLEMENTED";
 			break;
 		case "I/O":
-			command = "I/O";
+			//TODO: can be different devices
+			
 			break;
 		case "OUT":
 			command = "OUT";
