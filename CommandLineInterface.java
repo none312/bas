@@ -5,14 +5,7 @@ public class CommandLineInterface extends Gui
 	public static boolean name(String input){
 	parse.parseLine(input);
 	boolean valid = valid();
-	if(valid){
-		if(parse.getval()==null)
-			choosecmd(parse.getcmd());
-		else
-			choosecmd(parse.getcmd(), parse.getval());
-	}
-	return valid;
-		}
+	
 private static boolean valid()	{
 	if(parse.getcmd().equals("proc"))
 		return true;
