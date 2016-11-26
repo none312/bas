@@ -1,4 +1,4 @@
-import java.util.PriorityQueue; 
+import java.util.PriorityQueue;
 import java.awt.FlowLayout; //import default layout managing(ordering)
 import javax.swing.JFrame; // basic windows feature(title bar, minimize/maximize)
 import javax.swing.JLabel; // ouput text+images on screen
