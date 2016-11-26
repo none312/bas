@@ -7,17 +7,7 @@ public class Clock {
         startTime = curTime;
         cpuTime=0;
     }
-    
-    public void advanceClock(int curTime) {
-    	curTime++;
-    	//        cpuTime --;
-//        if (cpuTime <= 0){
-//            endTime = curTime;
-//            //evt.onFinish(this);
-        //}
-        
-    }
-    
+   
     public int getClock()
     {
     	return cpuTime;

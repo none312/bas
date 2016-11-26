@@ -1,18 +1,18 @@
 
 public class PCB {
 	private String name;
-	private int arrivalTime; // [0, 100] Only applies to unscheduled process
+	private long arrivalTime; // [0, 100] Only applies to unscheduled process
 	private int priority; // [1, 4] Only applies to unscheduled processes
 	private int burstTime; // [0, 10]
 	private int startTime; // [0, 100] Only applies to already scheduled
 							// processes
 	private String state;
 
-	public PCB(String name, int arrivalTime, int priority, int burstTime, String state) {
+	public PCB(String name, long arrivalTime, String state) {
 		this.name = name;
-		this.priority = priority;
+//		this.priority = priority;
 		this.arrivalTime = arrivalTime;
-		this.burstTime = burstTime;
+//		this.burstTime = burstTime;
 		this.state = state;
 	}
 	
@@ -25,7 +25,7 @@ public class PCB {
 		startTime=0;
 	}
 
-	public int getArrivalTime() {
+	public long getArrivalTime() {
 		return arrivalTime;
 	}
 
@@ -48,7 +48,7 @@ public class PCB {
 		return this.state;
 	}
 
-	public void setArrivalTime(int arrivalTime) {
+	public void setArrivalTime(long arrivalTime) {
 		this.arrivalTime = arrivalTime;
 	}
 

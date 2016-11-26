@@ -6,7 +6,8 @@ public class CPU {
 	public void advanceClock()
 	{
 		if(interupted == false && preempted == false)  //advance clock if process is not getting intereupted or preempted
-			cpuTime++;
+			cpuTime=clock.getClock();
+		cpuTime++;
 		//clock.getClock()++;
 	}
 	
