@@ -1,49 +1,34 @@
-public class CommandLineInterface extends Gui {
+import javax.swing.JFrame;
+
+public class CommandLineInterface extends JFrame  
+	{
 	private static final Parsing parse = new Parsing();
 	
-	public static boolean name(String input){
-	parse.parseLine(input);
-	boolean valid = valid();
-	
-private static boolean valid()	{
-	if(parse.getcmd().equals("proc"))
-		return true;
-	if(parse.getcmd().equals("mem"))
-		return true;
-	if(parse.getcmd().equals("exe"))
-		return true;
-	if(parse.getcmd().equals("reset"))
-		return true;
-	if(parse.getcmd().equals("exit"))
-		return true;
-	if(parse.getcmd().equals("load"))
-		if(parse.getval()!= null)
-			return true;
-	return false;
-	}
-private static void choosecmd(String cmd){
-	switch(cmd){
-	
-	case "proc": proc(); 
-	break;
-	
-	case "mem": mem(); 
-	break;
-	
-	case "exe": exe();
-	break;
-	
-	case "reset": reset();
-	break;
-	
-	case "exit": exit();
-	break;
-	
-	default: break;
-	}
-}
-	    private static void proc() {
+//	public static boolean name(String input){
+//	parse.parseLine(input);
+//	boolean valid = valid ();
+//	return valid;
+//		}
+public static String executeCmd(String cmd)	{ 
+	if(cmd.equals("proc"))
 
+		return proc();
+	else
+		return null;
+//	if(parse.getcmd().equals("mem"))
+//		mem();
+//	if(parse.getcmd().equals("exe"))
+//		exe();
+//	if(parse.getcmd().equals("reset"))
+//		reset();
+//	if(parse.getcmd().equals("exit"))
+//		exit();
+//	if(parse.getcmd().equals("load"))
+//		if(parse.getval()!= null)
+//		load();
+	}
+	    private static String proc() {
+	    	return "test";
 	    }
 
 	    private static void mem() {
