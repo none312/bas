@@ -43,7 +43,9 @@ public static String executeCmd(String cmd)	{
 	    }
 
 	    private static void reset() {
-
+		//mainFrame = the frame name you initially set
+		//mainFrame.repaint();
+		//mainFrame.setVisible(true);
 	    }
 	    
 	    private static void exit() {
