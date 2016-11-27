@@ -2,13 +2,20 @@ import javax.swing.JFrame;
 
 public class CommandLineInterface extends JFrame  
 	{
-	private static final Parsing parse = new Parsing();
+// 	//Executes the commands to the OS and simulators
 	
-//	public static boolean name(String input){
-//	parse.parseLine(input);
-//	boolean valid = valid ();
-//	return valid;
-//		}
+// 	long mem;
+// 	int valueOfMem;
+// 	int counter = 0;
+// 	String line = null;
+// 	String programName = null;
+// 	String num;
+// 	int numberOfCycles;
+// 	PriorityQueue<String> newProcess = new PriorityQueue<String>();
+	
+// 	private JFrame mainFrame;
+// 	private JPanel controlPanel;
+	
 public static String executeCmd(String cmd)	{ 
 	if(cmd.equals("proc"))
 
@@ -29,6 +36,18 @@ public static String executeCmd(String cmd)	{
 	}
 	    private static String proc() {
 	    	return "test";
+// 		DefaultTableModel  tableModel = new DefaultTableModel(col, 0);
+// 		JTable table = new JTable(tableModel);
+// 		JScrollPane tableContainer = new JScrollPane(table);
+// 		tableContainer.getViewport().setViewPosition(new Point(5,5));
+// 		mainFrame.add(tableContainer, BorderLayout.CENTER);
+// 		mainFrame.setSize(300, 150);
+// 		//controlPanel.setLayout(new BorderLayout());
+// 		//controlPanel.add(tableContainer, BorderLayout.CENTER);
+// 		//controlPanel.add(tableContainer,  BorderLayout.PAGE_START);
+// 		//mainFrame.getContentPane().add(controlPanel);
+// 		mainFrame.pack();
+// 		mainFrame.setVisible(true)
 	    }
 
 	    private static void mem() {
