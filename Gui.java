@@ -15,7 +15,8 @@ public class Gui extends JFrame {
 	 public static void main(String[]args){
 		Gui example = new Gui();
 		example.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		example.setSize(800,400);
+		example.setSize(1000, 700);
+		example.setTitle("Operating System Scheduler Simulator");
 		example.setVisible(true);
 	 }
 		private JPanel pcb = new JPanel();
