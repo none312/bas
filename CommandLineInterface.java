@@ -47,7 +47,9 @@ public static String executeCmd(String cmd)	{
 	    }
 	    
 	    private static void exit() {
-	      
+	    // yourFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    //or
+	    //mainFrame.dispatchEvent(new WindowEvent(mainFrame, WindowEvent.WINDOW_CLOSING));
 	    }
 
 	    private static void promptUser(){
