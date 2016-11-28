@@ -16,14 +16,14 @@ public class Process implements Comparable {
 	{
 		pcb= new PCB();
 	}
-	public Process(String name, long arrivalTime,  String state )
+	public Process(String name, long arrivalTime,  String state, int memReq, int memAddress)
 	{
-		pcb = new PCB (name, arrivalTime, state);
+		pcb = new PCB (name, arrivalTime, state, memReq, memAddress);
 	}
 
 	@Override
 	public String toString() {
-		return  pcb.getName() + ": Arrival time: " + pcb.getArrivalTime() + " Burst time: " + pcb.getBurstTime();
+		return  pcb.getName() + ": Arrival time: " + pcb.getArrivalTime() + " Burst time: " + pcb.getBurstTime() +" State: " +pcb.getState();
 	}
 	
 	@Override

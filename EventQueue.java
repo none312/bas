@@ -1,14 +1,14 @@
 import java.util.PriorityQueue;
 
 public class EventQueue {
-	PriorityQueue<ECB> eventQueue = new PriorityQueue<ECB>();
-
-	public void enQueue(ECB e) {
-		eventQueue.add(e);
-	}
+	private PriorityQueue<Events> queue = new PriorityQueue<>();
 	
-	public void deQueue()
-	{
-		eventQueue.poll();
+	public void enQueue(Events event) {
+	    queue.add(event);
+	} 
+	public boolean deQueue() {
+			return queue.remove(0);
+		}
 	}
-}
+
+

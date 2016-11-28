@@ -1,7 +1,7 @@
 
 public class Clock {
 	int startTime;
-	int cpuTime;
+	int cpuTime=0;
 	int endTime;
 	public void execute(int curTime) {
         startTime = curTime;

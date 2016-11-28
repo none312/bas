@@ -7,7 +7,7 @@ public class IO {
 	// TODO: generate random number from 25-50
 	public int generateIoBurstTime(){
 		Random r = new Random();
-		return r.nextInt();
+		return r.nextInt(25) + 25;
 	}
 
 }

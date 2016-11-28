@@ -7,13 +7,17 @@ public class PCB {
 	private int startTime; // [0, 100] Only applies to already scheduled
 							// processes
 	private String state;
-
-	public PCB(String name, long arrivalTime, String state) {
+	private int memReq;
+	private int memAddress;
+	public PCB(String name, long arrivalTime, String state, int memReq, int memAddress) {
 		this.name = name;
 //		this.priority = priority;
 		this.arrivalTime = arrivalTime;
 //		this.burstTime = burstTime;
 		this.state = state;
+		this.memReq=memReq;
+		this.memAddress=memAddress;
+		
 	}
 	
 	public PCB()
@@ -46,6 +50,13 @@ public class PCB {
 	}
 	public String getState() {
 		return this.state;
+	}
+	public int getMemReq(){
+		return this.memReq;
+	}
+	
+	public int getMemAddress(){
+		return this.memAddress;
 	}
 
 	public void setArrivalTime(long arrivalTime) {
