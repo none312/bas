@@ -1,30 +1,22 @@
 import java.awt.Color;
 import java.awt.GridLayout; //import default layout managing(ordering)
-import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.LineNumberReader;
+import java.util.PriorityQueue;
+import java.util.Random;
 
 import javax.swing.JFrame; // basic windows feature(title bar, minimize/maximize)
 import javax.swing.JLabel; // outputs text+images on screen
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Random;
-import java.awt.event.ActionEvent;
-import java.awt.color.*;
 
 public class Gui {
 	private static JFrame window = new JFrame();
@@ -37,7 +29,7 @@ public class Gui {
 	}
 
 	private JPanel pcb = new JPanel();
-	private JPanel gantt = new JPanel();
+	private JPanel gnatt = new JPanel();
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
@@ -78,34 +70,32 @@ public class Gui {
 	}
 
 	public JTable pcbTable;
-	int count = 0;
 	DefaultTableModel model = new DefaultTableModel();
-	//SPLIT multiple process, then split each attribute
+
+	// SPLIT multiple process, then split each attribute
 	public void createPcbTable(StringBuilder sb) {
-		String[] singlePcb,pcbInfo = null;
+		String[] singlePcb, pcbInfo = null;
 		String column[] = { "PROGRAM", "MEM LOCATION", "STATE", "BURST TIME", "ARRIVAL TIME" };
 		System.out.println(sb.toString());
 		// model = new DefaultTableModel();
 		model.setColumnIdentifiers(column);
 		pcbTable = new JTable(model);
-		pcbTable.setModel(model);
+		// pcbTable.setModel(model);
 		Object row[] = new Object[6];
 		if (!sb.toString().equals("")) {
-			if(sb.toString().contains("\n")){
+			if (sb.toString().contains("\n")) {
 				singlePcb = sb.toString().split("\n");
-				for(int i=0; i<singlePcb.length;i++)
-				{
-					pcbInfo=singlePcb[i].split(",");
+				for (int i = 0; i < singlePcb.length; i++) {
+					pcbInfo = singlePcb[i].split(",");
 				}
 			}
-			 pcbInfo = sb.toString().split(",");
+			pcbInfo = sb.toString().split(",");
 			for (int i = 0; i < pcbInfo.length; i++) {
 				row[i] = pcbInfo[i];
 			}
 		}
 		// model = (DefaultTableModel) jt.getModel();
 		model.addRow(row);
-
 	}
 
 	public int row_count = 0;
@@ -135,23 +125,6 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(jt);
 		pcb.add(sp);
 		window.add(pcb);
-
-		// jt.setBounds(30, 40, 200, 300);
-		// StringBuilder builder = new StringBuilder();
-		// builder.append("web,10kb,run,20,10,1");
-		// int index = 0;
-		// if (!sb.toString().equals("")) {
-		// String[] procList = sb.toString().split(",");
-		// for (int i = 0; i < 2; i++) {
-		// for (int j = 0; j < 6; j++) {
-		// data[i][j] = procList[j];
-		// // builder.delete(0, builder.indexOf(","));
-		// // System.out.println("BUILDER " +
-		// // builder.substring(0,builder.indexOf(",")));
-		//
-		// }
-		// }
-		// }
 	}
 
 	public JLabel lab = new JLabel("pcb");
@@ -162,7 +135,7 @@ public class Gui {
 	PriorityQueue<Process> jobQueue;
 	PriorityQueue<Process> readyQueue = new PriorityQueue<Process>();
 	final int TOTAL_MEMORY = 256;
-//	Scheduler scheduler = new Scheduler();
+	Scheduler scheduler = new Scheduler();
 
 	public Gui() {
 
@@ -180,16 +153,15 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(pcbTable);
 		pcb.add(sp);
 		window.add(pcb);
-		gantt.add(gt);
+		gnatt.add(gt);
 		stats.add(st);
 
 		// window.add(pcb);
-		window.add(gantt);
+		window.add(gnatt);
 		window.add(stats);
 
 		txtfd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				System.out.println("TXTFD " + txtfd.getText());
 				display.setText(executeCmd(txtfd.getText()));
 			}
 		});
@@ -199,25 +171,19 @@ public class Gui {
 
 	public String executeCmd(String cmd) {
 		if (cmd.equals("proc"))
-			return proc(new StringBuilder());
+			return proc();
 		else if (cmd.startsWith("load ")) {
 			return load(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
 		} else if (cmd.equals("mem"))
 			return mem();
 		// if(parse.getcmd().equals("mem"))
 		// mem();
-		else if (cmd.equals("exe")) {
-			return exe();
-		} else if (cmd.startsWith("exe ")) {
+		else if (cmd.startsWith("exe ")) {
 			return exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
-			
-		} else if (cmd.equals("reset")) 
-			return reset();
-		 else if (cmd.equals("exit")) 
-			return exit();
-		else
+		} else
 			return "Invalid command";
-		
+		// if(parse.getcmd().equals("reset"))
+		// reset();
 		// if(parse.getcmd().equals("exit"))
 		// exit();
 		// if(parse.getcmd().equals("load"))
@@ -225,85 +191,18 @@ public class Gui {
 		// load();
 	}
 
-	private void executeProcess(String task, PriorityQueue<Process> readyQueue) {
-		if (task.startsWith("CALCULATE")) {
-			// int burstTime =
-			// Integer.parseInt(task.substring(task.lastIndexOf(" ") + 1,
-			// task.length()));
-			// pr.pcb.setBurstTime(burstTime);
-//			scheduler.fcfs(readyQueue);
-		} else if (task.equals("IO")) {
-			IO io = new IO();
-			io.generateIoBurstTime();
-		}
-	}
-	public JTable procTable;
-	private String proc(StringBuilder sb1) {
-	
-		int num = 0;
-		DefaultTableModel mod = new DefaultTableModel();
-		//SPLIT multiple process, then split each attribute
-	
-			String[] singleProc,procInfo = null;
-			String colHeadings[] = { "STATE", "PROGRAM NAME", "MEMORY USAGE", "CYCLES COMPLETE", "CYCLES LEFT", "I/O REQUESTS PERFORMED" };
-			System.out.println(sb1.toString());
-			// mod = new DefaultTableModel();
-			mod.setColumnIdentifiers(colHeadings);
-			procTable = new JTable(mod);
-			procTable.setModel(mod);
-			Object row[] = new Object[6];
-			if (!sb1.toString().equals("")) {
-				if(sb1.toString().contains("\n")){
-					singleProc = sb1.toString().split("\n");
-					for(int i=0; i<singleProc.length;i++)
-					{
-						procInfo=singleProc[i].split(",");
-					}
-				}
-				 procInfo = sb1.toString().split(",");
-				for (int i = 0; i < procInfo.length; i++) {
-					row[i] = procInfo[i];
-				}
-			}
-			// mod = (DefaultTableModel) jt.getModel();
-			mod.addRow(row);
-			return null;
-	
-//		StringBuilder builder = new StringBuilder();
-//
-//		System.out.println("READY QUEUE " + procString.toString());
-//
-//		createProcTable(procString);
-//
-//		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
+	private String proc() {
 
+		StringBuilder builder = new StringBuilder();
+
+		System.out.println("READY QUEUE " + procString.toString());
+
+		createProcTable(procString);
+
+		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
+		return "test";
 	}
 
-		public void createProcTable2(StringBuilder sb1) {
-			// String data[][] = { { "Web Browser", "100Kb","RUN", "1000", "2000",
-			// "2" }, { "Media Player", "40Kb","WAIT", "100", "200","4" }};
-			String colHeadings[] = { "STATE", "PROGRAM NAME", "MEMORY USAGE", "CYCLES COMPLETE", "CYCLES LEFT", "I/O REQUESTS PERFORMED" };
-			DefaultTableModel mod = new DefaultTableModel();
-			mod.setColumnIdentifiers(colHeadings);
-
-			// String data[][] = new String[100][100];
-			jt = new JTable(mod);
-
-			jt.setModel(mod);
-			String row[] = new String[7];
-			if (!sb1.toString().equals("")) {
-				String[] procList = sb1.toString().split(",");
-				for (int i = 0; i < procList.length; i++) {
-					row[i] = procList[i];
-				}
-			}
-			mod = (DefaultTableModel) jt.getModel();
-			mod.insertRow(row_count, row);
-			row_count++;
-			mod.fireTableDataChanged();
-		}
-		
-		
 	private String mem() {
 		createPcbTable(procString);
 		return "mem";
@@ -335,60 +234,24 @@ public class Gui {
 			pr.pcb.setState("Ready");
 			int totalCycles = totalCycles(pr.pcb.getName());
 			readyQueue.add(pr);
-			procString.append(pr.pcb.getName() + "," + pr.pcb.getMemAddress() + "," + pr.pcb.getState()
-					+ "," + totalCycles+ "," + pr.pcb.getArrivalTime()+"\n");
+			procString.append(pr.pcb.getName() + "," + pr.pcb.getMemAddress() + "," + pr.pcb.getState() + ","
+					+ totalCycles + "," + pr.pcb.getArrivalTime() + "\n");
 
 		}
 		builder.append("\n" + readyQueue);
-		return builder.toString();
-
-	}
-
-	private String exe() {
-		StringBuilder builder = new StringBuilder();
-		int memory = 0;
-		if (jobQueue.size() == 0) {
-			System.out.println("Error: No jobs availabled for executing");
-			return null;
-		}
-		Process pr = null;
-		System.out.println("SHOULD GO HERE " + readyQueue);
-//		scheduler.fcfs(readyQueue);
-		// }
-		// while(readyQueue.size()>0){
-		// try {
-		// LineNumberReader br = new LineNumberReader(new
-		// FileReader(pr.pcb.getName()));
-		// for (String line = null; (line = br.readLine()) != null;) {
-		// if (br.getLineNumber() >= 2) {
-		// // executeProcess(line,pr);
-		// builder.append(line).append("\n");
-		// }
-		// }
-		// } catch (IOException e1) {
-		// // TODO Auto-generated catch block
-		// e1.printStackTrace();
-		// }
-		// }
-
-		// int burstTime = Integer.parseInt(delimiter(pr.pcb.getName()));
-		// pr.pcb.setBurstTime(burstTime);
-		// scheduler.insertPCB(jobQueue.poll());
-		// scheduler.fcfs();
-		// System.out.println("BUILDER " + builder.toString());
 		return builder.toString();
 	}
 
 	private int totalCycles(String fileName) {
 		LineNumberReader br;
-		int totalCycles=0;
+		int totalCycles = 0;
 		try {
 			br = new LineNumberReader(new FileReader(fileName));
 			for (String line = null; (line = br.readLine()) != null;) {
 				if (br.getLineNumber() >= 2) {
 					// executeProcess(line,pr);
 					if (line.startsWith("CALCULATE")) {
-						totalCycles+=Integer.parseInt(line.substring(line.lastIndexOf(" ")+1,line.length()));
+						totalCycles += Integer.parseInt(line.substring(line.lastIndexOf(" ") + 1, line.length()));
 					}
 				}
 			}
@@ -403,33 +266,16 @@ public class Gui {
 	private String exe(String limitCycles) {
 		StringBuilder builder = new StringBuilder();
 		int memory = 0;
-		if (jobQueue.size() == 0) {
+		if (readyQueue.size() == 0) {
 			System.out.println("Error: No jobs availabled for executing");
 			return null;
 		}
-		Process pr = null;
-		while (jobQueue.size() > 0 && memory < TOTAL_MEMORY) {
-			pr = jobQueue.poll();
-			pr.pcb.setArrivalTime(System.currentTimeMillis());
-			pr.pcb.setState("Ready");
-			readyQueue.add(pr);
-		}
 		int cycles = 0;
-		while (readyQueue.size() > 0 && cycles < Integer.parseInt(limitCycles)) {
-			try {
-				LineNumberReader br = new LineNumberReader(new FileReader(pr.pcb.getName()));
-				for (String line = null; (line = br.readLine()) != null;) {
-					if (br.getLineNumber() >= 2) {
-						// executeProcess(line,pr);
-						builder.append(line).append("\n");
-					}
-				}
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		while (readyQueue.size() > 0) {
+			scheduler.fcfs(readyQueue, Integer.parseInt(limitCycles));
+			
 		}
-
+		builder.append("exe");
 		// int burstTime = Integer.parseInt(delimiter(pr.pcb.getName()));
 		// pr.pcb.setBurstTime(burstTime);
 		// scheduler.insertPCB(jobQueue.poll());
@@ -437,14 +283,13 @@ public class Gui {
 		// System.out.println("BUILDER " + builder.toString());
 		return builder.toString();
 	}
-	private String reset() {
-	
-		window.repaint();
-		window.setVisible(true);
-		return null;
+
+	private void reset() {
+
 	}
-	private String exit() {
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
-		return null;
+
+	private void exit() {
+
 	}
+
 }
