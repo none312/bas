@@ -14,6 +14,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -36,7 +37,7 @@ public class Gui {
 	}
 
 	private JPanel pcb = new JPanel();
-	private JPanel gnatt = new JPanel();
+	private JPanel gantt = new JPanel();
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
@@ -161,7 +162,7 @@ public class Gui {
 	PriorityQueue<Process> jobQueue;
 	PriorityQueue<Process> readyQueue = new PriorityQueue<Process>();
 	final int TOTAL_MEMORY = 256;
-	Scheduler scheduler = new Scheduler();
+//	Scheduler scheduler = new Scheduler();
 
 	public Gui() {
 
@@ -179,11 +180,11 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(pcbTable);
 		pcb.add(sp);
 		window.add(pcb);
-		gnatt.add(gt);
+		gantt.add(gt);
 		stats.add(st);
 
 		// window.add(pcb);
-		window.add(gnatt);
+		window.add(gantt);
 		window.add(stats);
 
 		txtfd.addActionListener(new ActionListener() {
@@ -198,7 +199,7 @@ public class Gui {
 
 	public String executeCmd(String cmd) {
 		if (cmd.equals("proc"))
-			return proc();
+			return proc(new StringBuilder());
 		else if (cmd.startsWith("load ")) {
 			return load(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
 		} else if (cmd.equals("mem"))
@@ -209,10 +210,14 @@ public class Gui {
 			return exe();
 		} else if (cmd.startsWith("exe ")) {
 			return exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
-		} else
+			
+		} else if (cmd.equals("reset")) 
+			return reset();
+		 else if (cmd.equals("exit")) 
+			return exit();
+		else
 			return "Invalid command";
-		// if(parse.getcmd().equals("reset"))
-		// reset();
+		
 		// if(parse.getcmd().equals("exit"))
 		// exit();
 		// if(parse.getcmd().equals("load"))
@@ -226,24 +231,79 @@ public class Gui {
 			// Integer.parseInt(task.substring(task.lastIndexOf(" ") + 1,
 			// task.length()));
 			// pr.pcb.setBurstTime(burstTime);
-			scheduler.fcfs(readyQueue);
+//			scheduler.fcfs(readyQueue);
 		} else if (task.equals("IO")) {
 			IO io = new IO();
 			io.generateIoBurstTime();
 		}
 	}
+	public JTable procTable;
+	private String proc(StringBuilder sb1) {
+	
+		int num = 0;
+		DefaultTableModel mod = new DefaultTableModel();
+		//SPLIT multiple process, then split each attribute
+	
+			String[] singleProc,procInfo = null;
+			String colHeadings[] = { "STATE", "PROGRAM NAME", "MEMORY USAGE", "CYCLES COMPLETE", "CYCLES LEFT", "I/O REQUESTS PERFORMED" };
+			System.out.println(sb1.toString());
+			// mod = new DefaultTableModel();
+			mod.setColumnIdentifiers(colHeadings);
+			procTable = new JTable(mod);
+			procTable.setModel(mod);
+			Object row[] = new Object[6];
+			if (!sb1.toString().equals("")) {
+				if(sb1.toString().contains("\n")){
+					singleProc = sb1.toString().split("\n");
+					for(int i=0; i<singleProc.length;i++)
+					{
+						procInfo=singleProc[i].split(",");
+					}
+				}
+				 procInfo = sb1.toString().split(",");
+				for (int i = 0; i < procInfo.length; i++) {
+					row[i] = procInfo[i];
+				}
+			}
+			// mod = (DefaultTableModel) jt.getModel();
+			mod.addRow(row);
+			return null;
+	
+//		StringBuilder builder = new StringBuilder();
+//
+//		System.out.println("READY QUEUE " + procString.toString());
+//
+//		createProcTable(procString);
+//
+//		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
 
-	private String proc() {
-		StringBuilder builder = new StringBuilder();
-
-		System.out.println("READY QUEUE " + procString.toString());
-
-		createProcTable(procString);
-
-		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
-		return "test";
 	}
 
+		public void createProcTable2(StringBuilder sb1) {
+			// String data[][] = { { "Web Browser", "100Kb","RUN", "1000", "2000",
+			// "2" }, { "Media Player", "40Kb","WAIT", "100", "200","4" }};
+			String colHeadings[] = { "STATE", "PROGRAM NAME", "MEMORY USAGE", "CYCLES COMPLETE", "CYCLES LEFT", "I/O REQUESTS PERFORMED" };
+			DefaultTableModel mod = new DefaultTableModel();
+			mod.setColumnIdentifiers(colHeadings);
+
+			// String data[][] = new String[100][100];
+			jt = new JTable(mod);
+
+			jt.setModel(mod);
+			String row[] = new String[7];
+			if (!sb1.toString().equals("")) {
+				String[] procList = sb1.toString().split(",");
+				for (int i = 0; i < procList.length; i++) {
+					row[i] = procList[i];
+				}
+			}
+			mod = (DefaultTableModel) jt.getModel();
+			mod.insertRow(row_count, row);
+			row_count++;
+			mod.fireTableDataChanged();
+		}
+		
+		
 	private String mem() {
 		createPcbTable(procString);
 		return "mem";
@@ -293,7 +353,7 @@ public class Gui {
 		}
 		Process pr = null;
 		System.out.println("SHOULD GO HERE " + readyQueue);
-		scheduler.fcfs(readyQueue);
+//		scheduler.fcfs(readyQueue);
 		// }
 		// while(readyQueue.size()>0){
 		// try {
@@ -377,13 +437,14 @@ public class Gui {
 		// System.out.println("BUILDER " + builder.toString());
 		return builder.toString();
 	}
-
-	private void reset() {
-
+	private String reset() {
+	
+		window.repaint();
+		window.setVisible(true);
+		return null;
 	}
-
-	private void exit() {
-
+	private String exit() {
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);	
+		return null;
 	}
-
 }
