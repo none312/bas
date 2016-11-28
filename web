@@ -1,4 +1,5 @@
 web
+mem_req 10
 CALCULATE 10
 IO
 YIELD
