@@ -1,7 +1,9 @@
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout; //import default layout managing(ordering)
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -19,6 +21,7 @@ import javax.swing.JTextPane;
 import javax.swing.table.DefaultTableModel;
 
 public class Gui {
+	private static final long Memory = 0;
 	private static JFrame window = new JFrame();
 
 	public static void main(String[] args) {
@@ -192,20 +195,48 @@ public class Gui {
 	}
 
 	private String proc() {
-
-		StringBuilder builder = new StringBuilder();
-
-		System.out.println("READY QUEUE " + procString.toString());
-
-		createProcTable(procString);
-
-		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
-		return "test";
+		
+   JFrame frame = new JFrame();
+   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   String[] col = {"Process State", "Program Name", "Memory Usage", "Cycles Complete", "Cycles Left", "I/O Requests Performed"};
+   PCB pcb = new PCB();
+   Clock cloc = new Clock();
+   Object rowData[][] = { { pcb.getState(), "" , "","" } };
+		JTable table = new JTable(rowData, col);
+		JScrollPane scrollPane = new JScrollPane(table);
+		frame.add(scrollPane, BorderLayout.CENTER);
+		frame.setSize(300, 150);
+		frame.setVisible(true);
+		
+//		StringBuilder builder = new StringBuilder();
+//
+//		System.out.println("READY QUEUE " + procString.toString());
+//
+//		createProcTable(procString);
+//
+//		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
+//		return "test";
 	}
 
 	private String mem() {
 		createPcbTable(procString);
 		return "mem";
+		
+		Runtime rt = Runtime.getRuntime();
+		Memory = rt.totalMemory() - rt.freeMemory();
+		String num = Long.toString(Memory);
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		String[] col = {"Memory Used"};
+		
+		Object rowData[][] = { { num} };
+		  
+		JTable table = new JTable(rowData, col);
+		JScrollPane scrollPane = new JScrollPane(table);
+		frame.add(scrollPane, BorderLayout.CENTER);
+		frame.setSize(300, 150);
+		frame.setVisible(true);
+		
 	}
 
 	private String load(String fileName) {
@@ -219,8 +250,7 @@ public class Gui {
 			Random r = new Random();
 			String name = br.readLine();
 			String memReq = br.readLine();
-			p = new Process(name, curTime, "New",
-					Integer.parseInt(memReq.substring(memReq.lastIndexOf(" ") + 1, memReq.length())), r.nextInt(100));
+			p = new Process(name, curTime, "New", Integer.parseInt(memReq.substring(memReq.lastIndexOf(" ") + 1, memReq.length())), r.nextInt(100));
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -285,11 +315,20 @@ public class Gui {
 	}
 
 	private void reset() {
-
+		Clock clock = new Clock();
+		Clock.getClock();
+		Clock.reset();
+		
+		window.setVisible(false);
+		window.setVisible(true);
 	}
 
 	private void exit() {
-
+		window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+		//or
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		//or
+		System.exit(0);
 	}
 
 }
