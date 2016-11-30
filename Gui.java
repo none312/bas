@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout; //import default layout managing(ordering)
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,10 +30,12 @@ public class Gui {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setSize(1600, 700);
 		window.setVisible(true);
+		window.getContentPane().setBackground(Color.WHITE);
 	}
+	
 
-	private JPanel pcb = new JPanel();
-	private JPanel gnatt = new JPanel();
+	private JPanel pcb = new JPanel(new BorderLayout());
+	private JPanel gantt = new JPanel();
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
@@ -60,14 +63,14 @@ public class Gui {
 		// }
 		// });
 
-		txtfd.setBackground(Color.black);
-		txtfd.setForeground(Color.white);
-		txtfd.setCaretColor(Color.white);
+		txtfd.setBackground(Color.RED);
+		txtfd.setForeground(Color.BLACK);
+		txtfd.setCaretColor(Color.BLACK);
 		input.add(txtfd);
 
 		display.setText("OUTPUT");
-		display.setBackground(Color.black);
-		display.setForeground(Color.white);
+		display.setBackground(Color.GREEN);
+		display.setForeground(Color.BLACK);
 		input.add(display);
 
 	}
@@ -131,7 +134,7 @@ public class Gui {
 	}
 
 	public JLabel lab = new JLabel("pcb");
-	public JLabel gt = new JLabel("gnatt");
+	public JLabel gt = new JLabel("gantt");
 	public JLabel st = new JLabel("stats");
 	int limitCycles = 0;
 	StringBuilder procString = new StringBuilder();
@@ -139,6 +142,8 @@ public class Gui {
 	PriorityQueue<Process> readyQueue = new PriorityQueue<Process>();
 	final int TOTAL_MEMORY = 256;
 	Scheduler scheduler = new Scheduler();
+	
+	GanttChart gc = new GanttChart();
 
 	public Gui() {
 
@@ -156,11 +161,11 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(pcbTable);
 		pcb.add(sp);
 		window.add(pcb);
-		gnatt.add(gt);
 		stats.add(st);
 
 		// window.add(pcb);
-		window.add(gnatt);
+		window.add(gc);
+		
 		window.add(stats);
 
 		txtfd.addActionListener(new ActionListener() {
@@ -183,7 +188,12 @@ public class Gui {
 		// mem();
 		else if (cmd.startsWith("exe ")) {
 			return exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
-		} else
+		}else if(cmd.equals("reset"))
+			return reset();
+		else if (cmd.equals("exit")) {
+			return exit();
+		}
+		else
 			return "Invalid command";
 		// if(parse.getcmd().equals("reset"))
 		// reset();
@@ -197,7 +207,7 @@ public class Gui {
 	private String proc() {
 		
    JFrame frame = new JFrame();
-   frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+   frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
    String[] col = {"Process State", "Program Name", "Memory Usage", "Cycles Complete", "Cycles Left", "I/O Requests Performed"};
    PCB pcb = new PCB();
    Clock cloc = new Clock();
@@ -215,27 +225,27 @@ public class Gui {
 //		createProcTable(procString);
 //
 //		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
-//		return "test";
+		return "test";
 	}
 
 	private String mem() {
 		createPcbTable(procString);
 		return "mem";
-		
-		Runtime rt = Runtime.getRuntime();
-		Memory = rt.totalMemory() - rt.freeMemory();
-		String num = Long.toString(Memory);
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		String[] col = {"Memory Used"};
-		
-		Object rowData[][] = { { num} };
-		  
-		JTable table = new JTable(rowData, col);
-		JScrollPane scrollPane = new JScrollPane(table);
-		frame.add(scrollPane, BorderLayout.CENTER);
-		frame.setSize(300, 150);
-		frame.setVisible(true);
+//		
+////		Runtime rt = Runtime.getRuntime();
+////		Memory = rt.totalMemory() - rt.freeMemory();
+//		String num = Long.toString(Memory);
+//		JFrame frame = new JFrame();
+//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		String[] col = {"Memory Used"};
+//		
+//		Object rowData[][] = { { num} };
+//		  
+//		JTable table = new JTable(rowData, col);
+//		JScrollPane scrollPane = new JScrollPane(table);
+//		frame.add(scrollPane, BorderLayout.CENTER);
+//		frame.setSize(300, 150);
+//		frame.setVisible(true);
 		
 	}
 
@@ -314,21 +324,18 @@ public class Gui {
 		return builder.toString();
 	}
 
-	private void reset() {
+	private String reset() {
 		Clock clock = new Clock();
-		Clock.getClock();
-		Clock.reset();
-		
+		clock.reset();
 		window.setVisible(false);
+		window.repaint();
 		window.setVisible(true);
+		return null;
 	}
 
-	private void exit() {
+	private String exit() {
 		window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-		//or
-		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//or
-		System.exit(0);
+		return null;
 	}
 
 }
