@@ -19,10 +19,16 @@ The GUI consists of the input command(textfield), the output command, the PCB ta
 COMMANDS 
 
 load
+
 exe
+
 reset
+
 exit
+
 executeCmd
+
 proc
+
 createProcTable
 
