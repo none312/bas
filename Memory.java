@@ -1,19 +1,12 @@
 
 public class Memory {
 
-    public int memTotal = 256;
+	public static final int TOTAL_MEMORY = 256;
+    public int memAvailable = 0;
     public int memUsed = 0;
-
-    public Memory(int mem) {
-        memTotal = mem;
-    }
 
     public Memory() {
 
-    }
-
-    public void setFullMemory(int value) {
-        memTotal = value;
     }
 
     public int addMemUsed(int value) {
@@ -28,8 +21,8 @@ public class Memory {
         return memUsed;
     }
 
-    public int getFullMemory() {
-        return memTotal;
+    public int getTotalMemory() {
+        return TOTAL_MEMORY;
     }
 
     public int getMemoryUsed() {
@@ -37,7 +30,7 @@ public class Memory {
     }
 
     public int getAvailableMemory() {
-        return memTotal - memUsed;
+        return TOTAL_MEMORY - memUsed;
     }
 
 }

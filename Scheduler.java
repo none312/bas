@@ -14,9 +14,7 @@ public class Scheduler {
 	public static PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
 	public static PriorityQueue<Process> rdyQ = new PriorityQueue<Process>();
 	public static PriorityQueue<ECB> waitingQueue = new PriorityQueue<ECB>();
-	private int limitCycles = 0;
-	public int cycles = 0;
-	private boolean isCont=true;
+
 	ExecutionQueue executionQueue = new ExecutionQueue();
 
 	public static CPU cpu = new CPU();
@@ -28,20 +26,24 @@ public class Scheduler {
 		// jobQueue.add(p1);
 		// jobQueue.add(p2);
 	}
-
-	public PriorityQueue<Process> getReadyQ() {
+	
+	public PriorityQueue<Process> getReadyQ()
+	{
 		return rdyQ;
 	}
-
-	public PriorityQueue<Process> getJobQ() {
+	
+	public PriorityQueue<Process> getJobQ()
+	{
 		return jobQueue;
 	}
-
-	public ExecutionQueue getExecutionQ() {
+	
+	public ExecutionQueue getExecutionQ()
+	{
 		return executionQueue;
 	}
-
-	public PriorityQueue<ECB> getWaitingQueue() {
+	
+	public PriorityQueue<ECB> getWaitingQueue()
+	{
 		return waitingQueue;
 	}
 
@@ -55,11 +57,11 @@ public class Scheduler {
 		rdyQ.poll();
 	}
 
-	public void fcfs(PriorityQueue<Process> readyQueue, int limitCycles) {
+	public void fcfs(PriorityQueue<Process> readyQueue) {
 		// PriorityQueue<Process> readyQueue = jobQueue;
-		this.limitCycles = limitCycles;
+
 		Process curExecutedProc = new Process();
-		while (readyQueue.size() > 0) {
+		while (readyQueue.size() > 0 && cpu.preempted == false) {
 			curExecutedProc = readyQueue.poll(); // executing first proc in
 													// raedyqueue
 			curExecutedProc.pcb.setState("Run");
@@ -67,11 +69,11 @@ public class Scheduler {
 			System.out.println("Executing " + curExecutedProc.pcb.getName() + "...........");
 			try {
 				LineNumberReader br = new LineNumberReader(new FileReader(curExecutedProc.pcb.getName()));
-				String line=null;
-				while (((line = br.readLine()) != null)&&cpu.preempted==false) {
+				for (String line = null; (line = br.readLine()) != null;) {
 					if (br.getLineNumber() >= 2) {
 						System.out.println(line);
-						executeProg(line, curExecutedProc, limitCycles);
+						executeProg(line, curExecutedProc);
+
 					}
 				}
 			} catch (IOException e1) {
@@ -79,6 +81,7 @@ public class Scheduler {
 				e1.printStackTrace();
 			}
 		}
+
 
 		//
 		// int curBurstTime=0;
@@ -108,39 +111,40 @@ public class Scheduler {
 		// }
 	}
 
-	private void executeProg(String task, Process pr, int c) {
-		if (task.startsWith("CALCULATE")) {
-			this.cycles = c;
+	private static void executeProg(String task, Process pr) {
+		if (task.startsWith("CALCULATE ")) {
 			int burstTime = Integer.parseInt(task.substring(task.lastIndexOf(" ") + 1, task.length()));
 			pr.pcb.setBurstTime(burstTime);
 			while (burstTime > 0) {
 				cpu.advanceClock();
 				burstTime--;
-				cycles--;
-				if (cycles<=0)
-				{
-					cpu.detectPreemption();
-					break;
-				}
 			}
+			System.out.println("Cpu time " + cpu.clock.getClock());
+			// scheduler.fcfs(readyQueue);
 		}
 		// TODO: can only work with 1 event in the queue
-		else if (task.equals("I/O")) {
-			io io = new io();
-			ECB ecb = new ECB(pr.pcb.getName(), io.generateIoBurstTime(), System.currentTimeMillis());
+		else if (task.equals("IO")) {
+			IO io = new IO();
+			ECB ecb = new ECB(pr.pcb.getName(), "I/O request", io.generateIoBurstTime(), System.currentTimeMillis());
 			waitingQueue.add(ecb);
 			System.out.println("WAITING QUEUE " + waitingQueue.poll().toString());
 			while (ecb.ioBurstTime > 0) {
 				cpu.advanceClock();
 				ecb.ioBurstTime--;
 			}
-		} else if (task.equals("YIELD")) {
-			cpu.detectPreemption();
+			System.out.println("NUMBER OF CYCLES " + cpu.clock.getClock());
+		}
+		else if (task.equals("YIELD"))
+		{
 			
-		} else if (task.equals("OUT")) {
+		}
+		else if(task.equals("OUT"))
+		{
 			StringBuilder builder = new StringBuilder();
-			builder.append("Current result: ");
-		} else {
+			builder.append("");
+		}
+		else
+		{
 			System.out.println("Error: Unknown command");
 		}
 	}

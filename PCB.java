@@ -1,6 +1,7 @@
 
 public class PCB {
 	private String name;
+	private String id;
 	private long arrivalTime; // [0, 100] Only applies to unscheduled process
 	private int priority; // [1, 4] Only applies to unscheduled processes
 	private int burstTime; // [0, 10]
@@ -9,7 +10,8 @@ public class PCB {
 	private String state;
 	private int memReq;
 	private int memAddress;
-	public PCB(String name, long arrivalTime, String state, int memReq, int memAddress) {
+	public PCB(String id, String name, long arrivalTime, String state, int memReq, int memAddress) {
+		this.id = id;
 		this.name = name;
 //		this.priority = priority;
 		this.arrivalTime = arrivalTime;
@@ -58,6 +60,10 @@ public class PCB {
 	public int getMemAddress(){
 		return this.memAddress;
 	}
+	public String getId()
+	{
+		return this.id;
+	}
 
 	public void setArrivalTime(long arrivalTime) {
 		this.arrivalTime = arrivalTime;
@@ -80,5 +86,9 @@ public class PCB {
 	}
 	public void setState(String state) {
 		this.state = state;
+	}
+	public void setId(String id)
+	{
+		this.id= id;
 	}
 }

@@ -7,21 +7,20 @@ public class ECB implements Comparable{
 	long arrivalTime;
 	int ioBurstTime;
 	
-	public ECB(String name, int ioBurstTime, long arrivalTime)
+	public ECB(String name, String description, int ioBurstTime, long arrivalTime)
 	{
 		this.name=name;
-		this.description="Request " + ECBdesc();
+		this.description=randomDesc();
 		this.ioBurstTime=ioBurstTime;
 		this.arrivalTime=arrivalTime;
 	}
-	
 	public void setName(String name) {
 		this.name=name;
 	}
 	
 	public void setDescription(String des)
 	{
-		description=des;
+		description=randomDesc();
 	}
 	
 	public String getName(){
@@ -36,6 +35,18 @@ public class ECB implements Comparable{
 		return arrivalTime;
 	}
 	
+	public String randomDesc()
+	{
+		ArrayList<String> descList = new ArrayList<String>();
+		descList.add("Monitor");
+		descList.add("Speaker");
+		descList.add("USB hub");
+		descList.add("Keyboard");
+		descList.add("Mouse");
+		Random r = new Random();
+		String desc = descList.get(r.nextInt(descList.size()));
+		return desc;
+	}
 	@Override
 	public String toString(){
 		return name + ": Description " + description + " IOburstTime " + ioBurstTime;
@@ -44,17 +55,5 @@ public class ECB implements Comparable{
 	public int compareTo(Object o) {
 		ECB e = (ECB) o;
 		return e.getArrivalTime() < e.getArrivalTime() ? -1 : 1;
-	}
-	
-	private String ECBdesc()
-	{
-		ArrayList<String> hardwares = new ArrayList<String>();
-		hardwares.add("Monitor");
-		hardwares.add("Speaker");
-		hardwares.add("Keyboard");
-		hardwares.add("Mouse");
-		hardwares.add("Disk");
-		Random r = new Random();
-		return hardwares.get(r.nextInt(hardwares.size()));
 	}
 }

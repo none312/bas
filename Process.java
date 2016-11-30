@@ -16,9 +16,9 @@ public class Process implements Comparable {
 	{
 		pcb= new PCB();
 	}
-	public Process(String name, long arrivalTime,  String state, int memReq, int memAddress)
+	public Process(String id, String name, long arrivalTime,  String state, int memReq, int memAddress)
 	{
-		pcb = new PCB (name, arrivalTime, state, memReq, memAddress);
+		pcb = new PCB (id, name, arrivalTime, state, memReq, memAddress);
 	}
 
 	@Override
