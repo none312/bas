@@ -1,4 +1,5 @@
 CMSC 312 – Operating System Simulator Project
+
 Authors: Khanh Tran, Shilpa Kalisetty
 
 PROJECT DESCRIPTION
