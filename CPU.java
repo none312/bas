@@ -1,25 +1,35 @@
 
 public class CPU {
 	public Clock clock = new Clock();
-	public int cpuTime = 0;
+	public int cpuTime;
 	public boolean interupted, preempted;
-	public void advanceClock()
+
+	public CPU()
 	{
-		if(interupted == false && preempted == false)  //advance clock if process is not getting intereupted or preempted
-			cpuTime=clock.getClock();
+		cpuTime = 0;
+	}
+	public void advanceClock() {
+		// if(interupted == false && preempted == false) //advance clock if
+		// process is not getting intereupted or preempted
+		//cpuTime = clock.getClock();
 		cpuTime++;
-		//clock.getClock()++;
+		// clock.getClock()++;
 	}
 	
-	public boolean detectInterupt()
+	public int getClock()
 	{
+		return cpuTime;
+	}
+
+	public boolean detectInterupt() {
 		interupted = true;
 		return interupted;
 	}
-	
-	public boolean detectPreemption()
-	{
+
+	public boolean detectPreemption() {
 		preempted = true;
 		return preempted;
 	}
+	
+
 }

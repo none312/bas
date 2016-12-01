@@ -1,6 +1,9 @@
 web
-mem_req 10
+mem_req 100
 CALCULATE 10
 IO
 YIELD
 OUT
+CALCULATE 10
+IO
+YIELD

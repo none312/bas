@@ -1,3 +1,4 @@
+import java.util.Date;
 
 public class Clock {
 	int startTime;
@@ -11,5 +12,10 @@ public class Clock {
     public int getClock()
     {
     	return cpuTime;
+    }
+    
+    public static void main (String args[])
+    {
+    	System.out.println(new Date().getMinutes());
     }
 }

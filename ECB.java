@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Random;
 
 public class ECB implements Comparable{
 	String name;
@@ -5,11 +7,11 @@ public class ECB implements Comparable{
 	long arrivalTime;
 	int ioBurstTime;
 	
-	public ECB(String name, String description, int ioBurstTime, long arrivalTime)
+	public ECB(String name, long arrivalTime)
 	{
 		this.name=name;
-		this.description=description;
-		this.ioBurstTime=ioBurstTime;
+		this.description=randomDesc();
+		this.ioBurstTime=randomIOburstTime();
 		this.arrivalTime=arrivalTime;
 	}
 	public void setName(String name) {
@@ -18,7 +20,7 @@ public class ECB implements Comparable{
 	
 	public void setDescription(String des)
 	{
-		description=des;
+		description=randomDesc();
 	}
 	
 	public String getName(){
@@ -33,6 +35,25 @@ public class ECB implements Comparable{
 		return arrivalTime;
 	}
 	
+	public String randomDesc()
+	{
+		ArrayList<String> descList = new ArrayList<String>();
+		descList.add("Monitor");
+		descList.add("Speaker");
+		descList.add("USB hub");
+		descList.add("Keyboard");
+		descList.add("Mouse");
+		Random r = new Random();
+		String desc = "Request for " + descList.get(r.nextInt(descList.size()));
+		return desc;
+	}
+	
+	public int randomIOburstTime()
+	{
+		Random r = new Random();
+		int ioBurstTime = r.nextInt(25) + 25;
+		return ioBurstTime;
+	}
 	@Override
 	public String toString(){
 		return name + ": Description " + description + " IOburstTime " + ioBurstTime;
