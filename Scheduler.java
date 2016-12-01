@@ -1,151 +1,126 @@
-import java.util.PriorityQueue;
-import java.io.LineNumberReader;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.PriorityQueue;
 
-public class Scheduler {
-	public static PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
-	public static PriorityQueue<Process> rdyQ = new PriorityQueue<Process>();
-	public static PriorityQueue<ECB> waitingQueue = new PriorityQueue<ECB>();
+import org.apache.commons.lang3.StringUtils;
 
+
+public class Scheduler {
+	private static int limitCycles;
+	public static PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
+	public static PriorityQueue<Process> readyQueue = new PriorityQueue<Process>();
+	public static PriorityQueue<ECB> waitingQueue = new PriorityQueue<ECB>();
+	private LineNumberReader br;
+
+	StringBuilder output = new StringBuilder();
 	ExecutionQueue executionQueue = new ExecutionQueue();
 
 	public static CPU cpu = new CPU();
 
-	public Scheduler() {
-		// jobQueue = new PriorityQueue<Process>(size);
-		// Process p1 = new Process("Process 1", 0, "new");
-		// Process p2 = new Process("Process 2", 4, "new");
-		// jobQueue.add(p1);
-		// jobQueue.add(p2);
-	}
-	
-	public PriorityQueue<Process> getReadyQ()
-	{
-		return rdyQ;
-	}
-	
-	public PriorityQueue<Process> getJobQ()
-	{
-		return jobQueue;
-	}
-	
-	public ExecutionQueue getExecutionQ()
-	{
-		return executionQueue;
-	}
-	
-	public PriorityQueue<ECB> getWaitingQueue()
-	{
-		return waitingQueue;
-	}
+	public Scheduler() {}
 
 	public void insertPCB(Process p) {
 		p.pcb.setState("Ready");
 		p.pcb.setArrivalTime(System.currentTimeMillis());
-		rdyQ.add(p);
+		readyQueue.add(p);
 	}
 
 	public void removePCB() {
-		rdyQ.poll();
+		readyQueue.poll();
 	}
 
-	public void fcfs(PriorityQueue<Process> readyQueue) {
+	public StringBuilder fcfs(PriorityQueue<Process> rdyQ, int cycles) {
 		// PriorityQueue<Process> readyQueue = jobQueue;
-
+		readyQueue = rdyQ;
+		limitCycles = cycles;
 		Process curExecutedProc = new Process();
-		while (readyQueue.size() > 0 && cpu.preempted == false) {
+		while (readyQueue.size() > 0) {
+			cpu.preempted=false;
 			curExecutedProc = readyQueue.poll(); // executing first proc in
-													// raedyqueue
+
 			curExecutedProc.pcb.setState("Run");
 			executionQueue.enQueue(curExecutedProc);
+			
 			System.out.println("Executing " + curExecutedProc.pcb.getName() + "...........");
 			try {
-				LineNumberReader br = new LineNumberReader(new FileReader(curExecutedProc.pcb.getName()));
+				int curOp=0;
+
+				if(StringUtils.isEmpty(curExecutedProc.pcb.getCurrentOperation()))
+				{
+					curOp=2;
+				}
+				else
+				{
+					curOp=Integer.parseInt(curExecutedProc.pcb.getCurrentOperation());
+				}
+				br = new LineNumberReader(new FileReader(curExecutedProc.pcb.getName()));
 				for (String line = null; (line = br.readLine()) != null;) {
-					if (br.getLineNumber() >= 2) {
+					
+					if (br.getLineNumber() > curOp) {
+						if (cpu.preempted)
+							break;
 						System.out.println(line);
 						executeProg(line, curExecutedProc);
-
 					}
 				}
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			if (cpu.detectPreemption()) {
+				System.out.println("Process is preempted.");
+			} // Done reading whole program file
+			executionQueue.deQueue();
 		}
-
-
-		//
-		// int curBurstTime=0;
-		// int real_time = 0;
-		// int cpu_time = 0;
-		// while (readyQueue.size() > 0) {
-		// curExecutedProc = readyQueue.peek();
-		// curBurstTime = curExecutedProc.pcb.getBurstTime();
-		// readyQueue.poll();
-		// executionQueue.enQueue(curExecutedProc);
-		// System.out.println("Executing " + curExecutedProc.pcb.getName() +
-		// "...........");
-		// while(curBurstTime>0){
-		// //System.out.println(readyQueue.poll());
-		//// if(real_time ==3)
-		//// {
-		//// cpu.detectInterupt();
-		//// waitingQueue.add(executionQueue.)
-		//// }
-		// real_time++;
-		// cpu_time++;
-		// curBurstTime--;
-		// System.out.println("Real time: " + real_time + " cpu_time " +
-		// cpu_time + " curBurstTime " + curBurstTime);
-		// }
-
-		// }
+		return output;
 	}
 
-	private static void executeProg(String task, Process pr) {
+	private void executeProg(String task, Process pr) {
 		if (task.startsWith("CALCULATE ")) {
 			int burstTime = Integer.parseInt(task.substring(task.lastIndexOf(" ") + 1, task.length()));
 			pr.pcb.setBurstTime(burstTime);
 			while (burstTime > 0) {
 				cpu.advanceClock();
 				burstTime--;
+				if (cpu.getClock() >= limitCycles) {
+					cpu.detectPreemption();
+					break;
+				}
 			}
-			System.out.println("Cpu time " + cpu.clock.getClock());
-			// scheduler.fcfs(readyQueue);
+			System.out.println(cpu.getClock());
 		}
 		// TODO: can only work with 1 event in the queue
 		else if (task.equals("IO")) {
-			IO io = new IO();
-			ECB ecb = new ECB(pr.pcb.getName(), "I/O request", io.generateIoBurstTime(), System.currentTimeMillis());
+			IOScheduler io = new IOScheduler();
+
+			ECB ecb = new ECB(pr.pcb.getName(), System.currentTimeMillis());
 			waitingQueue.add(ecb);
-			System.out.println("WAITING QUEUE " + waitingQueue.poll().toString());
+			System.out.println(ecb.toString());
 			while (ecb.ioBurstTime > 0) {
 				cpu.advanceClock();
 				ecb.ioBurstTime--;
+				if (cpu.getClock() >= limitCycles) {
+					cpu.detectPreemption();
+					break;
+				}
+		
 			}
-			System.out.println("NUMBER OF CYCLES " + cpu.clock.getClock());
-		}
-		else if (task.equals("YIELD"))
-		{
-			
-		}
-		else if(task.equals("OUT"))
-		{
-			StringBuilder builder = new StringBuilder();
-			builder.append("");
-		}
-		else
-		{
-			System.out.println("Error: Unknown command");
+			System.out.println(cpu.getClock());
+		} else if (task.equals("YIELD")) {
+			cpu.detectPreemption();
+			Process currentProcessState = new Process();
+			currentProcessState.pcb.setArrivalTime(System.currentTimeMillis());
+			currentProcessState.pcb.setState("Ready");
+			currentProcessState.pcb.setCurrentOperation(Integer.toString(br.getLineNumber() + 1));
+			currentProcessState.pcb.setName(executionQueue.peek().pcb.getName());
+			currentProcessState.pcb.setMemAddress(executionQueue.peek().pcb.getMemAddress());
+			currentProcessState.pcb.setMemReq(executionQueue.peek().pcb.getMemReq());
+			insertPCB(currentProcessState);
+
+		} else if (task.equals("OUT")) {
+			output.append(executionQueue.peek().pcb.toString());
+		} else {
+			output.append("Error: Unknown command");
 		}
 	}
 

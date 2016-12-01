@@ -1,3 +1,4 @@
+import java.util.Date;
 
 public class PCB {
 	private String name;
@@ -10,6 +11,7 @@ public class PCB {
 	private String state;
 	private int memReq;
 	private int memAddress;
+	private String currentOperation;
 	public PCB(String id, String name, long arrivalTime, String state, int memReq, int memAddress) {
 		this.id = id;
 		this.name = name;
@@ -68,6 +70,18 @@ public class PCB {
 	public void setArrivalTime(long arrivalTime) {
 		this.arrivalTime = arrivalTime;
 	}
+	
+	public void setCurrentOperation(String lineNumber){
+		this.currentOperation = lineNumber;
+	}
+	public String getCurrentOperation(){
+		return currentOperation;
+	}
+	
+	
+	public void setArriveTime(Date arrivalTime) {
+		this.arrivalTime = arrivalTime.getTime();
+	}
 
 	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
@@ -90,5 +104,13 @@ public class PCB {
 	public void setId(String id)
 	{
 		this.id= id;
+	}
+
+	public void setMemAddress(int memAddress) {
+		this.memAddress=memAddress;	
+	}
+	public void setMemReq(int memReq)
+	{
+		this.memReq =memReq;
 	}
 }

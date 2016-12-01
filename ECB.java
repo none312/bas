@@ -7,11 +7,11 @@ public class ECB implements Comparable{
 	long arrivalTime;
 	int ioBurstTime;
 	
-	public ECB(String name, String description, int ioBurstTime, long arrivalTime)
+	public ECB(String name, long arrivalTime)
 	{
 		this.name=name;
 		this.description=randomDesc();
-		this.ioBurstTime=ioBurstTime;
+		this.ioBurstTime=randomIOburstTime();
 		this.arrivalTime=arrivalTime;
 	}
 	public void setName(String name) {
@@ -44,8 +44,15 @@ public class ECB implements Comparable{
 		descList.add("Keyboard");
 		descList.add("Mouse");
 		Random r = new Random();
-		String desc = descList.get(r.nextInt(descList.size()));
+		String desc = "Request for " + descList.get(r.nextInt(descList.size()));
 		return desc;
+	}
+	
+	public int randomIOburstTime()
+	{
+		Random r = new Random();
+		int ioBurstTime = r.nextInt(25) + 25;
+		return ioBurstTime;
 	}
 	@Override
 	public String toString(){

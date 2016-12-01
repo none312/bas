@@ -1,8 +1,11 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout; //import default layout managing(ordering)
 import java.awt.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JFrame; // basic windows feature(title bar, minimize/maximize)
 import javax.swing.JLabel; // outputs text+images on screen
 import javax.swing.JPanel;
@@ -43,9 +46,10 @@ public class Gui {
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
-	public JPanel input = new JPanel(new GridLayout(2, 0));
+	public JPanel input = new JPanel();
+	
 	public JLabel txl = new JLabel("output");
-	public JTextField txtfd = new JTextField();
+	public JTextField txtfd = new JTextField(20);
 	public JTextPane display = new JTextPane();
 
 	// text from text area and set it to the output
@@ -66,10 +70,12 @@ public class Gui {
 		// }
 		// }
 		// });
-
+		input.setLayout(new FlowLayout());
 		txtfd.setBackground(Color.black);
 		txtfd.setForeground(Color.white);
 		txtfd.setCaretColor(Color.white);
+//		txtfd.setBorder(null);
+
 		input.add(txtfd);
 
 		display.setText("OUTPUT");
@@ -98,10 +104,9 @@ public class Gui {
 		if (queue.size() <= 0)
 			return;
 		info = helper.extractPcbInfo(queue.peek());
-		System.out.println(queue);
 		if (model.getRowCount() > 0) {
 			for (int r = 0; r < model.getRowCount(); r++) {
-				
+
 				if (queue.peek().pcb.getId().equals(pcbTable.getValueAt(r, 0))) {
 					model.removeRow(r);
 				}
@@ -109,40 +114,11 @@ public class Gui {
 		}
 		for (int columnIndex = 0; columnIndex < pcbTable.getColumnCount(); columnIndex++) {
 			row[columnIndex] = info[columnIndex];
-			
+
 		}
 		model.addRow(row);
 
 	}
-
-	// SPLIT multiple process, then split each attribute
-	public void createPcbTable(StringBuilder sb) {
-		String[] singlePcb, pcbInfo = null;
-		String column[] = { "ID", "PROGRAM", "MEM LOCATION", "STATE", "BURST TIME", "ARRIVAL TIME" };
-		System.out.println(sb.toString());
-		// model = new DefaultTableModel();
-		model.setColumnIdentifiers(column);
-		pcbTable = new JTable(model);
-		pcbTable.setModel(model);
-		Object row[] = new Object[6];
-		if (!sb.toString().equals("")) {
-			if (sb.toString().contains("\n")) {
-				singlePcb = sb.toString().split("\n");
-				for (int i = 0; i < singlePcb.length; i++) {
-					pcbInfo = singlePcb[i].split(",");
-				}
-			}
-			pcbInfo = sb.toString().split(",");
-			for (int i = 0; i < pcbInfo.length; i++) {
-				row[i] = pcbInfo[i];
-			}
-		}
-		// model = (DefaultTableModel) jt.getModel();
-		model.addRow(row);
-
-	}
-
-	public int row_count = 0;
 
 	public void createProcTable(StringBuilder sb) {
 		// String data[][] = { { "Web Browser", "100Kb","RUN", "1000", "2000",
@@ -163,8 +139,6 @@ public class Gui {
 			}
 		}
 		model = (DefaultTableModel) jt.getModel();
-		model.insertRow(row_count, row);
-		row_count++;
 		model.fireTableDataChanged();
 		JScrollPane sp = new JScrollPane(jt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
 				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
@@ -249,43 +223,44 @@ public class Gui {
 	}
 
 	private String mem() {
-		createPcbTable(procString);
+		// createPcbTable(procString);
 		return "mem";
 	}
-
 
 	/*
 	 * Ex) Load web - JobQueue add new Process [web, arrivalTime, mem] - Loop
 	 * through job - check memory before adding to jobQueue
 	 */
 	int id = 0;
+
 	private String load(String fileName) {
 		jobQueue = new PriorityQueue<Process>();
 		StringBuilder builder = new StringBuilder();
 		long curTime = System.currentTimeMillis();
-		
+
 		Process p = null;
-		if (memory.getAvailableMemory() > 0) {
-			try {
-				BufferedReader br = new BufferedReader(new FileReader(fileName));
-				// while(br.readLine()!=null)
-				Random r = new Random();
-				String name = br.readLine();
-				String memReq = br.readLine();
+
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(fileName));
+			// while(br.readLine()!=null)
+			Random r = new Random();
+			String name = br.readLine();
+			String memReq = br.readLine();
+			int memUsed = Integer.parseInt(memReq.substring(memReq.lastIndexOf(" ") + 1, memReq.length()));
+			memory.addMemUsed(memUsed);
+			System.out.println(memory.getMemoryUsed());
+			if (memory.getAvailableMemory() > 0) {
 				// Create new Process with name, arrivalTime, State, memory req,
 				// memory location
-				p = new Process(Integer.toString(id), name, curTime, "New",
-						Integer.parseInt(memReq.substring(memReq.lastIndexOf(" ") + 1, memReq.length())),
-						r.nextInt(100));
+				p = new Process(Integer.toString(id), name, curTime, "New", memUsed, r.nextInt(100));
 
 				jobQueue.add(p);
 				updatePcbTable(jobQueue);
 				id++;
-				//System.out.println(readyQueue);
-			
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				// System.out.println(readyQueue);
+
+			} else {
+				return "Loading process unsuccesful. Reached maximum memory";
 			}
 			PriorityQueue<Process> tempQ = new PriorityQueue<Process>();
 			while (jobQueue.size() > 0) {
@@ -297,11 +272,11 @@ public class Gui {
 				updatePcbTable(tempQ);
 			}
 
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		else
-		{
-			return "Reached maximum memory";
-		}
+
 		//
 		// int memUsed = memory.addMemUsed(jobQueue.peek().pcb.getMemReq());
 		// System.out.println(memUsed);
@@ -329,19 +304,11 @@ public class Gui {
 	}
 
 	private String exe(String limitCycles) {
-		StringBuilder builder = new StringBuilder();
-		int memory = 0;
-		if (readyQueue.size() == 0) {
-			System.out.println("Error: No jobs availabled for executing. Need to LOAD a program before EXE");
-			return null;
+		if (readyQueue.size() <= 0) {
+			return "Error: No jobs availabled for executing. Need to LOAD a program before EXE";
 		}
-		scheduler.fcfs(readyQueue);
-		// int burstTime = Integer.parseInt(delimiter(pr.pcb.getName()));
-		// pr.pcb.setBurstTime(burstTime);
-		// scheduler.insertPCB(jobQueue.poll());
-		// scheduler.fcfs();
-		// System.out.println("BUILDER " + builder.toString());
-		return builder.toString();
+		String output = scheduler.fcfs(readyQueue, Integer.parseInt(limitCycles)).toString();
+		return output;
 
 	}
 

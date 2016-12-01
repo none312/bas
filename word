@@ -1,4 +1,5 @@
 word
+mem_req 150
 CALCULATE 10
 I/O 10
 YIELD

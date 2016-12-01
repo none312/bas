@@ -23,7 +23,7 @@ public class Process implements Comparable {
 
 	@Override
 	public String toString() {
-		return  pcb.getName() + ": Arrival time: " + pcb.getArrivalTime() + " Burst time: " + pcb.getBurstTime() +" State: " +pcb.getState();
+		return  pcb.getName() + ": Arrival time: " + pcb.getArrivalTime() + " Burst time: " + pcb.getBurstTime() +" State: " +pcb.getState() + " Memory Require " + pcb.getMemReq();
 	}
 	
 	@Override
