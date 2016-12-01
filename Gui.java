@@ -19,6 +19,7 @@ import javax.swing.table.DefaultTableModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -42,7 +43,7 @@ public class Gui {
 	}
 
 	private JPanel pcb = new JPanel(new BorderLayout());
-	private JPanel gnatt = new JPanel();
+	private JPanel gantt = new JPanel();
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
@@ -173,11 +174,11 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(pcbTable);
 		pcb.add(sp);
 		window.add(pcb);
-		gnatt.add(gt);
+		gantt.add(gt);
 		stats.add(st);
 
 		// window.add(pcb);
-		window.add(gnatt);
+		window.add(gantt);
 		window.add(stats);
 
 		txtfd.addActionListener(new ActionListener() {
@@ -200,7 +201,10 @@ public class Gui {
 		// mem();
 		else if (cmd.startsWith("exe ")) {
 			return exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
-		} else
+		}else if (cmd.equals("exit")) {
+			return exit();
+		}  
+		else
 			return "Invalid command";
 		// if(parse.getcmd().equals("reset"))
 		// reset();
@@ -316,8 +320,9 @@ public class Gui {
 
 	}
 
-	private void exit() {
-
+	private String exit() {
+		window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+		return null;
 	}
 
 }
