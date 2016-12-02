@@ -360,7 +360,8 @@ DefaultTableModel model2 = new DefaultTableModel();
 	}
 
 	private void exit() {
-
+	window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+		return null;
 	}
 
 }
