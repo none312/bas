@@ -33,18 +33,6 @@ public class PCB {
 		this.memReq=memReq;
 	}
 	
-	public SimpleStringProperty firstNameProperty() {
-        return n;
-    }
-
-    public SimpleStringProperty lastNameProperty() {
-        return s;
-    }
-
-    public SimpleStringProperty emailProperty() {
-        return m;
-    }
-	
 	public PCB()
 	{
 		name="";
