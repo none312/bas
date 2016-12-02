@@ -100,7 +100,6 @@ StringBuilder builder = new StringBuilder();
 			ECB ecb = new ECB(pr.pcb.getName(), System.currentTimeMillis());
 			waitingQueue.add(ecb);
 			builder.append("\n"+waitingQueue.toString());
-			cpu.detectInterupt();
 			while (ecb.ioBurstTime > 0) {
 				cpu.advanceClock();
 				ecb.ioBurstTime--;
