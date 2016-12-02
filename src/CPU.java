@@ -1,6 +1,5 @@
 
 public class CPU {
-	public Clock clock = new Clock();
 	public int cpuTime;
 	public boolean interupted, preempted;
 
