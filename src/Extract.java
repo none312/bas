@@ -7,8 +7,8 @@ public class Extract {
 	public static int totalCycles;
 	public static int IOcount;
 	public static int IOburstTime;
-
-	public static String[] extractPcbInfo(Process p) {
+	public static String[] extractPcbInfo(Process p)
+	{
 		String[] info = new String[6];
 		info[0] = p.pcb.getId();
 		info[1] = p.pcb.getName();
@@ -18,10 +18,13 @@ public class Extract {
 		info[5] = p.pcb.getState();
 		return info;
 	}
-
-	public static void extractProgInfo(String fileName) throws Exception {
-		String line = null;
 	
+	
+	
+	public static void extractProgInfo(String fileName) throws FileNotFoundException
+	{
+		String line = null;
+		
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		try {
 			while (br.readLine() != null) {
@@ -37,6 +40,6 @@ public class Extract {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}	
 	}
 }
