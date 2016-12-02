@@ -1,35 +1,27 @@
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Container;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout; //import default layout managing(ordering)
-import java.awt.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.PriorityQueue;
+import java.util.Random;
 
-import javax.swing.BoxLayout;
 import javax.swing.JFrame; // basic windows feature(title bar, minimize/maximize)
 import javax.swing.JLabel; // outputs text+images on screen
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
-import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
-
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.Random;
-import java.awt.event.ActionEvent;
-import java.awt.color.*;
 
 public class Gui {
 	private static JFrame window = new JFrame();
@@ -43,12 +35,12 @@ public class Gui {
 	}
 
 	private JPanel pcb = new JPanel(new BorderLayout());
-	private JPanel gantt = new JPanel();
+	private JPanel gnatt = new JPanel();
 	private JPanel stats = new JPanel();
 	private JPanel output = new JPanel();
 	public JTable jt;
-	public JPanel input = new JPanel();
-	
+	public JPanel input = new JPanel(new GridLayout(2, 1));
+
 	public JLabel txl = new JLabel("output");
 	public JTextField txtfd = new JTextField(20);
 	public JTextPane display = new JTextPane();
@@ -71,18 +63,17 @@ public class Gui {
 		// }
 		// }
 		// });
-		input.setLayout(new FlowLayout());
 		txtfd.setBackground(Color.black);
 		txtfd.setForeground(Color.white);
 		txtfd.setCaretColor(Color.white);
-//		txtfd.setBorder(null);
+		 txtfd.setBorder(null);
 
 		input.add(txtfd);
 
-		display.setText("OUTPUT");
+		JScrollPane scp = new JScrollPane();
 		display.setBackground(Color.black);
 		display.setForeground(Color.white);
-		input.add(display);
+		input.add(scp.add(display));
 
 	}
 
@@ -97,10 +88,10 @@ public class Gui {
 		String row[] = new String[7];
 		model.setColumnIdentifiers(column);
 		pcbTable = new JTable(model);
-		pcbTable.getColumnModel().getColumn(0).setMinWidth(0);
-
-		pcbTable.getColumnModel().getColumn(0).setWidth(0);
-		pcbTable.getColumnModel().getColumn(0).setMaxWidth(0);
+		// pcbTable.getColumnModel().getColumn(0).setMinWidth(0);
+		//
+		// pcbTable.getColumnModel().getColumn(0).setWidth(0);
+		// pcbTable.getColumnModel().getColumn(0).setMaxWidth(0);
 
 		if (queue.size() <= 0)
 			return;
@@ -162,7 +153,9 @@ public class Gui {
 
 		// super("The title bar"); // title for the window
 		// CommandLineInterface cmd = new CommandLineInterface();
-
+		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		window.setSize(1600, 700);
+		window.setVisible(true);
 		setInputPanel();
 		window.add(input); // adding item to the window
 		StringBuilder builder = new StringBuilder();
@@ -174,38 +167,35 @@ public class Gui {
 		JScrollPane sp = new JScrollPane(pcbTable);
 		pcb.add(sp);
 		window.add(pcb);
-		gantt.add(gt);
+		gnatt.add(gt);
 		stats.add(st);
 
 		// window.add(pcb);
-		window.add(gantt);
+		window.add(gnatt);
 		window.add(stats);
 
 		txtfd.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae) {
-				display.setText(executeCmd(txtfd.getText()));
+				executeCmd(txtfd.getText());
+				txtfd.setText("");
 			}
 		});
 		window.setLayout(new GridLayout(2, 1)); // default layout
 
 	}
 
-	public String executeCmd(String cmd) {
+	public void executeCmd(String cmd) {
 		if (cmd.equals("proc"))
-			return proc();
+			 proc();
 		else if (cmd.startsWith("load ")) {
-			return load(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
+			 load(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
 		} else if (cmd.equals("mem"))
-			return mem();
+			 mem();
 		// if(parse.getcmd().equals("mem"))
 		// mem();
 		else if (cmd.startsWith("exe ")) {
-			return exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
-		}else if (cmd.equals("exit")) {
-			return exit();
-		}  
-		else
-			return "Invalid command";
+			exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
+		} 
 		// if(parse.getcmd().equals("reset"))
 		// reset();
 		// if(parse.getcmd().equals("exit"))
@@ -215,19 +205,66 @@ public class Gui {
 		// load();
 	}
 
-	private String proc() {
-		StringBuilder builder = new StringBuilder();
 
-		System.out.println("READY QUEUE " + procString.toString());
+	JTable procTable;
+DefaultTableModel model3 = new DefaultTableModel();
+	private void proc() {
+		String column[] = { "PROGRAM", "MEM REQUIRE", "STATE", "TOTAL CYCLES", "I/O PERFORMED" };
+		String row[] = new String[6];
+		model3.setColumnIdentifiers(column);
+		procTable = new JTable(model3);
+		PriorityQueue<Process> temp = new PriorityQueue<Process>();
+	
+		    // prompt the user to enter their name
+		   
+		temp = readyQueue;
+		
+		while (temp.size() > 0) {
+			Process pr = temp.poll();
 
-		createProcTable(procString);
-
-		// System.out.println("WAITING QUEUE " + scheduler.getWaitingQueue());
-		return "test";
+			Extract helper = new Extract();
+			try {
+				helper.extractProgInfo(pr.pcb.name);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			row[0] = pr.pcb.getName();
+			row[1] = Integer.toString(pr.pcb.getMemReq());
+			row[2] = pr.pcb.getState();
+			row[3] = Integer.toString(helper.totalCycles);
+			row[4] = Integer.toString(helper.IOcount);
+//		System.out.println(row[0] + " " + row[1]);
+		}
+		model3.addRow(row);
+		 JOptionPane.showMessageDialog(null, new JScrollPane(procTable));
+		
 	}
 
+	JTable memTable;
+DefaultTableModel model2 = new DefaultTableModel();
 	private String mem() {
-		// createPcbTable(procString);
+		String column[] = { "PROGRAM", "MEM LOCATION", "MEMORY REQUIREMENT" };
+		String row[] = new String[3];
+		model2.setColumnIdentifiers(column);
+		memTable = new JTable(model2);
+		PriorityQueue<Process> temp = new PriorityQueue<Process>();
+	
+		 JFrame frame = new JFrame("Memory Table");
+
+		    // prompt the user to enter their name
+		   
+		temp = readyQueue;
+		while (temp.size() > 0) {
+			Process pr = temp.poll();
+		
+			row[0] = pr.pcb.getName();
+			row[1] = Integer.toString(pr.pcb.getMemAddress());
+			row[2] = Integer.toString(pr.pcb.getMemReq());
+//		System.out.println(row[0] + " " + row[1]);
+		}
+		model2.addRow(row);
+		 JOptionPane.showMessageDialog(null, new JScrollPane(memTable));
 		return "mem";
 	}
 
@@ -261,10 +298,12 @@ public class Gui {
 				jobQueue.add(p);
 				updatePcbTable(jobQueue);
 				id++;
+				builder.append(jobQueue.toString());
+				display.setText(builder.toString());
 				// System.out.println(readyQueue);
 
 			} else {
-				return "Loading process unsuccesful. Reached maximum memory";
+				display.setText("Loading process unsuccesful. Reached maximum memory");
 			}
 			PriorityQueue<Process> tempQ = new PriorityQueue<Process>();
 			while (jobQueue.size() > 0) {
@@ -307,12 +346,12 @@ public class Gui {
 
 	}
 
-	private String exe(String limitCycles) {
+	private void exe(String limitCycles) {
 		if (readyQueue.size() <= 0) {
-			return "Error: No jobs availabled for executing. Need to LOAD a program before EXE";
+			display.setText("Error: No jobs availabled for executing. Need to LOAD a program before EXE");
 		}
-		String output = scheduler.fcfs(readyQueue, Integer.parseInt(limitCycles)).toString();
-		return output;
+		display.setText(scheduler.fcfs(readyQueue, Integer.parseInt(limitCycles)));
+	
 
 	}
 
@@ -320,9 +359,8 @@ public class Gui {
 
 	}
 
-	private String exit() {
-		window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-		return null;
+	private void exit() {
+
 	}
 
 }

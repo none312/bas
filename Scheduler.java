@@ -3,17 +3,20 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.PriorityQueue;
 
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
 import org.apache.commons.lang3.StringUtils;
 
 
-public class Scheduler {
+public class Scheduler extends JTextArea{
 	private static int limitCycles;
 	public static PriorityQueue<Process> jobQueue = new PriorityQueue<Process>();
 	public static PriorityQueue<Process> readyQueue = new PriorityQueue<Process>();
 	public static PriorityQueue<ECB> waitingQueue = new PriorityQueue<ECB>();
 	private LineNumberReader br;
 
-	StringBuilder output = new StringBuilder();
+	String output;
 	ExecutionQueue executionQueue = new ExecutionQueue();
 
 	public static CPU cpu = new CPU();
@@ -29,8 +32,8 @@ public class Scheduler {
 	public void removePCB() {
 		readyQueue.poll();
 	}
-
-	public StringBuilder fcfs(PriorityQueue<Process> rdyQ, int cycles) {
+StringBuilder builder = new StringBuilder();
+	public String fcfs(PriorityQueue<Process> rdyQ, int cycles) {
 		// PriorityQueue<Process> readyQueue = jobQueue;
 		readyQueue = rdyQ;
 		limitCycles = cycles;
@@ -42,7 +45,7 @@ public class Scheduler {
 			curExecutedProc.pcb.setState("Run");
 			executionQueue.enQueue(curExecutedProc);
 			
-			System.out.println("Executing " + curExecutedProc.pcb.getName() + "...........");
+			builder.append("\nExecuting " + curExecutedProc.pcb.getName() + "...........");
 			try {
 				int curOp=0;
 
@@ -60,7 +63,7 @@ public class Scheduler {
 					if (br.getLineNumber() > curOp) {
 						if (cpu.preempted)
 							break;
-						System.out.println(line);
+						builder.append("\n"+line);
 						executeProg(line, curExecutedProc);
 					}
 				}
@@ -68,11 +71,12 @@ public class Scheduler {
 				e1.printStackTrace();
 			}
 			if (cpu.detectPreemption()) {
-				System.out.println("Process is preempted.");
+				builder.append("\nProcess is preempted.");
 			} // Done reading whole program file
 			executionQueue.deQueue();
 		}
-		return output;
+		
+		return builder.toString();
 	}
 
 	private void executeProg(String task, Process pr) {
@@ -95,7 +99,8 @@ public class Scheduler {
 
 			ECB ecb = new ECB(pr.pcb.getName(), System.currentTimeMillis());
 			waitingQueue.add(ecb);
-			System.out.println(ecb.toString());
+			builder.append("\n"+waitingQueue.toString());
+			cpu.detectInterupt();
 			while (ecb.ioBurstTime > 0) {
 				cpu.advanceClock();
 				ecb.ioBurstTime--;
@@ -118,9 +123,9 @@ public class Scheduler {
 			insertPCB(currentProcessState);
 
 		} else if (task.equals("OUT")) {
-			output.append(executionQueue.peek().pcb.toString());
+			output=executionQueue.peek().pcb.toString();
 		} else {
-			output.append("Error: Unknown command");
+			output="Error: Unknown command";
 		}
 	}
 

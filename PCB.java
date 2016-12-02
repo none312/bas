@@ -1,17 +1,19 @@
 import java.util.Date;
 
+import javafx.beans.property.SimpleStringProperty;
+
 public class PCB {
-	private String name;
-	private String id;
-	private long arrivalTime; // [0, 100] Only applies to unscheduled process
-	private int priority; // [1, 4] Only applies to unscheduled processes
-	private int burstTime; // [0, 10]
-	private int startTime; // [0, 100] Only applies to already scheduled
+	public String name;
+	public String id;
+	public long arrivalTime; // [0, 100] Only applies to unscheduled process
+	public int priority; // [1, 4] Only applies to unscheduled processes
+	public int burstTime; // [0, 10]
+	public int startTime; // [0, 100] Only applies to already scheduled
 							// processes
-	private String state;
-	private int memReq;
-	private int memAddress;
-	private String currentOperation;
+	public String state;
+	public int memReq;
+	public int memAddress;
+	public String currentOperation;
 	public PCB(String id, String name, long arrivalTime, String state, int memReq, int memAddress) {
 		this.id = id;
 		this.name = name;
@@ -23,6 +25,25 @@ public class PCB {
 		this.memAddress=memAddress;
 		
 	}
+	
+	public PCB(String name, String state, int memReq)
+	{
+		this.name=name;
+		this.state=state;
+		this.memReq=memReq;
+	}
+	
+	public SimpleStringProperty firstNameProperty() {
+        return n;
+    }
+
+    public SimpleStringProperty lastNameProperty() {
+        return s;
+    }
+
+    public SimpleStringProperty emailProperty() {
+        return m;
+    }
 	
 	public PCB()
 	{
