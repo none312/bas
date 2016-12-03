@@ -5,11 +5,11 @@ Authors: Khanh Tran, Shilpa Kalisetty
 
 **PROJECT DESCRIPTION**
 
-This project is a simulation of an Operating System, written in Java language. The whole OS contained a virtual memory of 256kB. It mainly uses the priority-queue for the scheduling algorithms implementation. We used the JAVAFX API vs the JAVAX API to represent our GUI + command interface display of all the processes with (wait time, turnaround time, arrival time, burst time) and the scheudling algorithms to make it appear as a rich application.
+This project is a simulation of an Operating System, written in Java language. The whole OS contained a virtual memory of 256kB. It mainly uses the priority-queue for the scheduling algorithms implementation. We used the JAVA SWING Library for our GUI + command interface display of all the processes with (wait time, turnaround time, arrival time, burst time) and the scheudling algorithms to make it appear as a rich application.
 
 **SCHEDULER**
 
-Our scheduler keeps track of all the processes that is being executed along with the states: ready state, run state, execute state, waiting state. We have implemented the First Come First Serve(FCFS) and the Round Robin(RR) Scheduling algorithms. First Come First Serve uses the FIFO data structure when scheduling processes. Round Robin is a pre-emptive scheduling algorithm since the scheduler kicks the processes out of the CPU once the time limit has been met.
+Our scheduler keeps track of all the processes that is being executed along with the states: ready state, run state, execute state, waiting state. We have implemented the First Come First Serve(FCFS) Scheduling algorithms. First Come First Serve uses the FIFO data structure when scheduling processes.
 
 **GUI**
 
@@ -37,7 +37,7 @@ MEM--the amount of memory that is available + used
 
 2. Run it, the command window should open
 
-3. "load job file(web, word, webbrowser")
+3. "load job file(web, word")
 
 4. "exe # of cycles" -----"exe 100"
 
