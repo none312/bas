@@ -13,7 +13,7 @@ Our scheduler keeps track of all the processes that is being executed along with
 
 **GUI**
 
-The GUI consists of the input command(textfield), the output command, the PCB table, the Gantt Chart, and the Statistics(progress of the simulation) that occur throughout the simulation of this project. The statistics involves the calculation of the average waiting time and the average turnaround time for the CPU utilization of each processes.
+The GUI consists of the input command(textfield), the output command, the PCB table, and the Statistics(progress of the simulation) that occur throughout the simulation of this project. The statistics involves the calculation of the average waiting time and the average turnaround time for the CPU utilization of each processes.
 
 **COMMANDS**
 
@@ -28,3 +28,17 @@ EXIT--exits out the simulation--> "EXIT_ON CLOSE"
 PROC--all of the processes needed to execute is displayed
 
 MEM--the amount of memory that is available + used
+
+
+**HOW TO RUN**
+-------------
+
+1. Open the Gui file
+
+2. Run it, the command window should open
+
+3. "load job file(web, word, webbrowser")
+
+4. "exe # of cycles"
+
+5. Should display all of the results in a basic table
