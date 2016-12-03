@@ -3,14 +3,6 @@
  *Variables: name, arrivalTime, priority, burstTime (expected run time)
  */
 public class Process implements Comparable {
-//	private String name;
-//	private int arrivalTime; // [0, 100] Only applies to unscheduled process
-//	private int priority; // [1, 4] Only applies to unscheduled processes
-//	private int burstTime; // [0, 10]
-//	private int startTime; // [0, 100] Only applies to already scheduled
-//							// processes
-//	private String state;
-
 	public PCB pcb;
 	public Process()
 	{
