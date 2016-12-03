@@ -39,6 +39,6 @@ MEM--the amount of memory that is available + used
 
 3. "load job file(web, word, webbrowser")
 
-4. "exe # of cycles"
+4. "exe # of cycles" -----"exe 100"
 
 5. Should display all of the results in a basic table
