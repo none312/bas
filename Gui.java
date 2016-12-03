@@ -74,8 +74,7 @@ public class Gui {
 		input.add(scrollPane);
 
 	}
-
-	public JTable pcbTable;
+		public JTable pcbTable;
 	int count = 0;
 	DefaultTableModel model = new DefaultTableModel();
 	Extract helper = new Extract();
@@ -161,8 +160,7 @@ public class Gui {
 			load(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
 		} else if (cmd.equals("mem"))
 			mem();
-		// if(parse.getcmd().equals("mem"))
-		// mem();
+		
 		else if (cmd.startsWith("exe ")) {
 			exe(cmd.substring(cmd.lastIndexOf(" ") + 1, cmd.length()));
 		} else if (cmd.equals("exit"))
@@ -172,13 +170,7 @@ public class Gui {
 		} else {
 			display.setText("Invalid Command");
 		}
-		// if(parse.getcmd().equals("reset"))
-		// reset();
-		// if(parse.getcmd().equals("exit"))
-		// exit();
-		// if(parse.getcmd().equals("load"))
-		// if(parse.getval()!= null)
-		// load();
+		
 	}
 
 	JTable procTable;
@@ -210,13 +202,11 @@ public class Gui {
 			row[2] = pr.pcb.getState();
 			row[3] = Integer.toString(helper.totalCycles);
 			row[4] = Integer.toString(helper.IOcount);
-			// System.out.println(row[0] + " " + row[1]);
 		}
 		model3.addRow(row);
 		JOptionPane.showMessageDialog(null, new JScrollPane(procTable));
 
 	}
-
 	JTable memTable;
 	DefaultTableModel model2 = new DefaultTableModel();
 
@@ -250,7 +240,6 @@ public class Gui {
 	 * through job - check memory before adding to jobQueue
 	 */
 	int id = 0;
-
 	private String load(String fileName) {
 		jobQueue = new PriorityQueue<Process>();
 		StringBuilder builder = new StringBuilder();
@@ -299,7 +288,6 @@ public class Gui {
 		return builder.toString();
 
 	}
-
 	private void exe(String limitCycles) {
 		if (readyQueue.size() <= 0) {
 			display.setText("Error: No jobs availabled for executing. Need to LOAD a program before EXE");
@@ -309,6 +297,7 @@ public class Gui {
 		updatePcbTable(readyQueue);
 		memory=scheduler.getMemory();
 	}
+
 
 	private void reset() {
 		readyQueue = new PriorityQueue<Process>();
