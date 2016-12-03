@@ -14,9 +14,7 @@ public class PCB {
 	public PCB(String id, String name, long arrivalTime, String state, int memReq, int memAddress) {
 		this.id = id;
 		this.name = name;
-//		this.priority = priority;
 		this.arrivalTime = arrivalTime;
-//		this.burstTime = burstTime;
 		this.state = state;
 		this.memReq=memReq;
 		this.memAddress=memAddress;
