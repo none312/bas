@@ -82,7 +82,7 @@ public class Gui {
 	String[] info;
 
 	public void updatePcbTable(PriorityQueue<Process> queue) {
-		String column[] = { "ID", "PROGRAM", "MEM LOCATION", "STATE", "BURST TIME", "ARRIVAL TIME" };
+		String column[] = { "ID", "PROGRAM", "MEM REQ", "STATE", "BURST TIME" };
 		String row[] = new String[7];
 		model.setColumnIdentifiers(column);
 		pcbTable = new JTable(model);
@@ -118,32 +118,6 @@ public class Gui {
 
 	}
 
-	public void createProcTable(StringBuilder sb) {
-		// String data[][] = { { "Web Browser", "100Kb","RUN", "1000", "2000",
-		// "2" }, { "Media Player", "40Kb","WAIT", "100", "200","4" }};
-		String column[] = { "PROGRAM", "MEM USAGE", "STATE", "CYCLES COMPLETE", "CYCLES LEFT", "I/O PERFORMED" };
-		DefaultTableModel model = new DefaultTableModel();
-		model.setColumnIdentifiers(column);
-
-		// String data[][] = new String[100][100];
-		jt = new JTable(model);
-
-		jt.setModel(model);
-		String row[] = new String[7];
-		if (!sb.toString().equals("")) {
-			String[] procList = sb.toString().split(",");
-			for (int i = 0; i < procList.length; i++) {
-				row[i] = procList[i];
-			}
-		}
-		model = (DefaultTableModel) jt.getModel();
-		model.fireTableDataChanged();
-		JScrollPane sp = new JScrollPane(jt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-		pcb.add(sp);
-		window.add(pcb);
-	}
 
 	public JLabel lab = new JLabel("pcb");
 	public JLabel gt = new JLabel("gnatt");
@@ -211,7 +185,7 @@ public class Gui {
 	DefaultTableModel model3 = new DefaultTableModel();
 
 	private void proc() {
-		String column[] = { "PROGRAM", "MEM REQUIRE", "STATE", "TOTAL CYCLES", "I/O PERFORMED" };
+		String column[] = { "PROGRAM", "MEM REQUIRE", "STATE", "TOTAL CYCLES", "I/O REQUEST" };
 		String row[] = new String[6];
 		model3.setColumnIdentifiers(column);
 		procTable = new JTable(model3);
